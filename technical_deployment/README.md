@@ -1,4 +1,4 @@
-#Cortana Intelligence Suite Product Detection from Images Solution
+# Cortana Intelligence Suite Product Detection from Images Solution
 
 ## Table of Contents
 - [Introduction](#introduction)
