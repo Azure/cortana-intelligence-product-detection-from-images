@@ -16,7 +16,7 @@
 - [Retrain Models](#retrain-models)
 
 ## Introduction
-The objective of this Guide is to demonstrate data pipelines for retailers to detect products from images. Retailers can use the detections to detect which product a customer has picked up from the shelf. This information can also help stores manage product stockings. This tutorial shows how to set up the prediciton service as well as retrain models as new data become available.
+The objective of this Guide is to demonstrate data pipelines for retailers to detect products from images. Retailers can use the detections to detect which product a customer has picked up from the shelf. This information can also help stores manage product stockings. This tutorial shows how to set up the prediction service as well as retrain models as new data become available.
 
 The end-to-end solution is implemented in the cloud using Microsoft Azure. The flow in this techincal guide is organized to reflect what we expect customers will do to develop their own solutions. Thus this deployment guid will walk you through the following steps:
 
@@ -77,6 +77,8 @@ In this tutorial, all resources will be generated in the resource group you just
 ### Create an Azure Storage Account
 
 In this step as well as all remaining steps, if any entry or item is not mentioned in the instruction, please leave it as the default value.
+
+We'll call Azure Storage Blob and Blob interchangeablly.
 
 1. Go to the [Azure Portal](https://ms.portal.azure.com) and navigate to the resource group you just created.
 2. In ***Overview*** panel, click **+Add** to add a new resource. Enter **Storage Account** and hit "Enter" key to search.
@@ -154,7 +156,7 @@ Save your credentials to the memo file.
 Once the VM is created, you can remote desktop into it using the account credentials that you provided. To get access link, follow these steps:
 
 1. From the Resource Group click the created DSVM (type "Virtual machine").
-2. In ***Overview*** panel, click on the **Connect** button at the top left corner to download the .rdp file. We'll use this file later.
+2. In ***Overview*** panel, click on the **Connect** button at the top left corner to download the ".rdp" file. We'll use this file later.
 
 <a name="webapp"></a>
 ### Create Web App
@@ -175,31 +177,88 @@ Once the VM is created, you can remote desktop into it using the account credent
 Now that the web app has been created, we'll deploy a web service to this app after training a model.
 
 ## Manage Historic Data
-As described in the architecture, we assume that there are some data on you local machine and we need to save those images onto DocumentDB and Azure Storage Blob. The demo data are saved in the folder /dataManagement. To download the content of this folder, you can use either of two approaches:
 
-- Open the [DownGit](https://minhaskamal.github.io/DownGit/#/home) site and enter "link to folder" then click on **Download** to download the folder. This approach just downloads the data we need and is faster. Unzip the downloaded file.
-- Download the entir repository by clicking on the **Clone or download** button of the GitHub repository and then **Download ZIP**. this approach downloads the entire repositor and takes longer.
+As described in the architecture, we assume that there are some data on you local machine and we need to save those images onto DocumentDB and Azure Storage Blob. The demo data are saved in the folder /data_management. To download the content of this folder, you can use either of these two approaches:
 
-Open the "config.py" file and provide the following values from your memo file:
+- Open the [DownGit](https://minhaskamal.github.io/DownGit/#/home) site and enter `https://github.com/Azure/cortana-intelligence-product-detection-from-images/tree/master/technical_deployment/data_management` then click on **Download** to download the folder. This approach just downloads the data we need and is faster. Unzip the downloaded file.
+- Download the entir repository by clicking on the **Clone or download** button of the GitHub repository and then **Download ZIP**. this approach downloads the entire repositor and takes longer. Unzip the downloaded file.
 
-- 
+Open the "config.py" file from a text editor and provide values for the following fields using the informaiton from your memo file and leave the other fields as is:
+
+- `blob_account_name`
+- `blob_account_key`
+- `documentdb_host`
+- `documentdb_key`
 
 Download Python 3.5.3 from [this site](https://www.python.org/downloads/) and install it. Then go to the command window and type the following:
 
 ````bash
-cd path-to-dataManagement-folder
+cd <path-to-data_management-folder>
 pip install -r requirements.txt
-
-
+python 1_upload_historical_data.py
 ````
+After successfulling running the above code, you can verify that the data has been uploaded successfully. To check the contents in Azure Storage Blob, go to the [Azure Portal](https://ms.portal.azure.com) and navigate to the resource group you just created. Then click on the Azure Storage Blob you created (type "Storage account") and click on "Blobs" in the **Overview** panel. Two containers have been created: *images* and *models*. Click on *images* to view the images that have been uploaded.
 
-## Configure DSVM
+To check the contents in DocumentDB, navigate to the resource group you just created. Then click on the DocumentDB you created (type "NoSQL (DocumentDB) account") and click on "Document Explorer" in the left panel. Then select the "image_collection" from the drop-down menu in the right panel and you will see the documents that have been created. Click on any ID to check the contents of that document. In each document the attribute "azureBlobUrl" points to the corresponding image saved on the Blob.
 
 ## Train a Model on DSVM
+
+### Configure the DSVM
+
+Double click the ".rdp" file that you downloaded in step [Provision the Microsoft Data Science Virtual Machine](#dsvm). Enter your credentials for the DSVM to log on to it. From this point forward we'll do everything on DSVM.
+
+Open a web browser on the DSVM and open the [GitHub repo](https://github.com/Azure/cortana-intelligence-product-detection-from-images). Download the repository by clicking on the **Clone or download** button of the GitHub repository and then **Download ZIP**. Unzip the downloaded file.
+
+In order to run the model we'll install some packages first. Locate the folder "train_model/resources/python35_64bit_requirements" and make a note of it. Open a command window and type the following:
+
+````bash
+conda create -n shtge2e python=3.5
+activate shtge2e
+cd <path-to-resources/python35_64bit_requirements>
+pip install -r requirements.txt
+````
+
+Running these commands successfully allows us to create a virtual environment and activate it. They also install the packages we will need for the rest of the tutorial.
+
+### Download Data
+
+In this step we'll download image from Blob and labels from DocumentDB. Just like on the local computer, we open the "config.py" script in /data_management from a text editor and provide values for the following fields using the informaiton from your memo file:
+
+- `blob_account_name`
+- `blob_account_key`
+- `documentdb_host`
+- `documentdb_key`
+
+In addition, use today's date as value for `model_version` in the format of `yyyymmdd`. Leave the other fields as is.
+
+Open a command window and type the following to download data.
+
+````bash
+activate shtge2e
+cd <path-to-data_management-folder>
+python 2_download_data_train.py
+````
+
+### Train the model
+Open a command window and type the following to train the model. You can learn more about the models from the detailed descriptions in the "train_model" folder.
+
+````bash
+activate shtge2e
+cd <path-to-train_model-folder>
+python 1_computeRois.py
+python 2_cntkGenerateInputs.py
+python 3_runCntk.py
+python 4_trainSvm.py
+python 5_evaluateResults.py
+python 5_visualizeResults.py
+````
 
 ## Monitor Model Performance
 
 ## Deploy a Web Service
+Copy all files from the "train_model" folder into the "web_service" folder. Also copy the "config.py" script from the "data_management" folder into the "web_service" folder. Open the "index.html" file in the folder "/web_service/WebApp/templates" from a text editor and replace "lzimages" with your **unique string** in the line `uploadPhotos('http://lzimages.azurewebsites.net/api/uploader')`
+
+
 
 ## Retrain Models
 
@@ -211,8 +270,5 @@ pip install -r requirements.txt
 [pic1]: https://cloud.githubusercontent.com/assets/9322661/24459697/2caf4612-146a-11e7-97e7-3b628cd7f760.PNG
 [pic2]: https://cloud.githubusercontent.com/assets/9322661/24463987/738fb9a2-1476-11e7-8273-17107a76cbd5.png
 [pic3]: https://cloud.githubusercontent.com/assets/9322661/24463988/739306f2-1476-11e7-811f-f8debc7a59b9.png
-
-
-
 
 
