@@ -1,0 +1,5 @@
+pytz==2016.10
+requests==2.8.1
+azure==1.0.3
+azure-storage==0.34.0
+pydocumentdb==2.0.1
