@@ -1,3 +1,15 @@
+/technical_deployment/train_model/*.pyc
+/technical_deployment/train_model/*.pyx
+/technical_deployment/train_model/__pycache__/
+/technical_deployment/train_model/backup_v0/
+/technical_deployment/train_model/data/liebherr_v4/
+/technical_deployment/train_model/fastRCNN/__pycache__/
+/technical_deployment/train_model/proc/
+/technical_deployment/train_model/resources/cntk/AlexNet.model
+/technical_deployment/train_model/resources/pascalVocData/
+/technical_deployment/train_model/results/
+/technical_deployment/train_model/selectivesearch/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
