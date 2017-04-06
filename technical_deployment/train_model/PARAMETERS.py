@@ -79,6 +79,10 @@ nmsThreshold = 0.3                      # Non-Maxima suppression threshold (in r
 vis_decisionThresholds = {'svm' : 0.5,  # Reject detections with low confidence, used only in 5_visualizeResults
                           'nn' : None}
 
+# evaluation
+evalVocOverlapThreshold = 0.1 # voc-style intersection-over-union threshold used to determine if object was found
+
+
 
 ############################
 # project-specific
@@ -141,6 +145,7 @@ else:
 ############################
 nrClasses = len(classes)
 cntk_featureDimensions['nn'] = nrClasses
+lutClass2Id = dict(zip(classes, range(len(classes))))
 
 print("PARAMETERS: datasetName = " + datasetName)
 assert cntk_padWidth == cntk_padHeight, "ERROR: different width and height for padding not supported."

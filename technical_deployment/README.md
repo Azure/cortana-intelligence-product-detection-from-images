@@ -23,11 +23,12 @@
 - [Retrain Models](#retrain-models)
 - [Additional Resources](#additional-resources)
 
+
 ## Introduction
 
 The objective of this Guide is to demonstrate data pipelines for retailers to detect products from images. Retailers can use the detections to detect which product a customer has picked up from the shelf. This information can also help stores manage product stockings. This tutorial shows how to set up the prediction service as well as retrain models as new data become available.
 
-The end-to-end solution is implemented in the cloud using Microsoft Azure. The flow in this techincal guide is organized to reflect what we expect customers will do to develop their own solutions. Thus this deployment guid will walk you through the following steps:
+The end-to-end solution is implemented in the cloud using Microsoft Azure. The flow in this techincal guide is organized to reflect what we expect customers will do to develop their own solutions. Thus this deployment guide will walk you through the following steps:
 
 - Create Azure Resource Group and add DocumentDB, Azure Storage Blob, Data Science Virtual Machine, Web App, Application Insights to the resource group
 - Install Python and related packages to copy data from on-prem to DocumentDB and Azure Storage Blob
@@ -114,7 +115,7 @@ Ater a successful deployment you should see a figure like below.
 
 [![Figure 3][pic3]][pic3]
 
-Get the primary key for the Azure Storage Account which will be used in the Python scripts to upload and download data by following these steps:
+Click on "Refresh" from the resource group's **Overview** pane so that the new resource shows up. Get the primary key for the Azure Storage Account which will be used in the Python scripts to upload and download data by following these steps:
 
 1. Click the created storage account. In the new panel, click on **Access keys**.
 1. In the new panel, click the "Click to copy" icon next to `key1`, and paste the key into your memo.
@@ -192,8 +193,26 @@ Once the VM is created, you can remote desktop into it using the account credent
 10. Click **OK** to confirm the App Service plan.
 11. Click **On** for "Application Insights."
 12. Leaving the default values for all other fields, click the **Create** button at the bottom.
+13. Go back to your resource group overview and wait until the App Service is deployed as reported in the Notifications area. Click **Refresh** in the **Overview** pane. 
+14. Click on the newly deployed App Service (Type "App Service") and you'll see the "Overview" page.
+15. In the left panel click on **Application settings** (in **SETTINGS** group) then selecct "64-bit" for "Platform" and "On" for "Always On." Save the settings by clicking on **Save**.
+16. In the left panel click on **Extensions** (in **DEVELOPMENT TOOLS** group) then click **+Add**. In the window that shows up select **Choose Extension** then **Python 3.5.3 x64**. 
+17. Click **OK** to accept legal terms and **OK** again to install the web app extension. Make sure the extension is installed successfully as reported in the "Notifications" area.
+18. In  the left panel click on **Deployment options** (in **DEPLOYMENT** group) then **Choose Source** followed by **Local Git Repository**. Leave **Performance Test** as "Not Configured" and click on **OK** to set up deployment source.
+19. If this is the first time you deploy application to Azure, you'll need to set your deployment credentials. To do this, click **Deployment credentials** (in **DEPLOYMENT** group) and select your username and password.
+20. Click **Overview** from the left panel and locate the value for "URL", hover over it and wait for the **Click to copy** button to appear. Click on it to copy the value. Paste it to your memo file.
+21. Click **Overview** from the left panel and locate the value for "Git clone url", hover over it and wait for the **Click to copy** button to appear. Click on it to copy the value. Paste it to your memo file.
 
-Now that the web app has been created, we'll deploy a web service to this app after training a model.
+Save your credentials to the memo file.
+
+| **Azure App Service** |                     |
+|------------------------|---------------------|
+| username        |[username]
+| password     |[password]  |
+| URL                     |[URL]  |
+| Git clone url     |[Git clone url]  |
+
+Now that the web app has been prepared, we'll deploy a web service to it after training a model.
 
 [Return to Top](#cortana-intelligence-suite-product-detection-from-images-solution)
 
@@ -201,26 +220,27 @@ Now that the web app has been created, we'll deploy a web service to this app af
 
 As described in the architecture, we assume that there are some data on you local machine and we need to save those images onto DocumentDB and Azure Storage Blob. The demo data are saved in the folder /data_management. To download the content of this folder, you can use either of these two approaches:
 
-- Open the [DownGit](https://minhaskamal.github.io/DownGit/#/home) site and enter `https://github.com/Azure/cortana-intelligence-product-detection-from-images/tree/master/technical_deployment/data_management` then click on **Download** to download the folder. This approach just downloads the data we need and is faster. Unzip the downloaded file.
 - Download the entir repository by clicking on the **Clone or download** button of the GitHub repository and then **Download ZIP**. this approach downloads the entire repositor and takes longer. Unzip the downloaded file.
+- Open the [DownGit](https://minhaskamal.github.io/DownGit/#/home) site and enter `https://github.com/Azure/cortana-intelligence-product-detection-from-images/tree/master/technical_deployment/data_management` then click on **Download** to download the folder. This approach just downloads the data we need and is faster. Unzip the downloaded file.
 
-Open the "config.py" file from a text editor and provide values for the following fields using the informaiton from your memo file and leave the other fields as is:
+
+Open the "technical_deployment/data_management/config.py" file from a text editor and provide values for the following fields using the informaiton from your memo file and leave the other fields as is:
 
 - `blob_account_name`
 - `blob_account_key`
 - `documentdb_host`
 - `documentdb_key`
 
-Download Python 3.5.3 from [this site](https://www.python.org/downloads/) and install it. Then go to the command window and type the following:
+If you already have Python installed, you can keep using your version. Otherwise, download Python 3.5.3 from [Python Software Foundation](https://www.python.org/downloads/) and install it. Then go to the command window and type the following:
 
 ````bash
 cd <path-to-data_management-folder>
 pip install -r requirements.txt
 python 1_upload_historical_data.py
 ````
-After successfulling running the above code, you can verify that the data has been uploaded successfully. To check the contents in Azure Storage Blob, go to the [Azure Portal](https://ms.portal.azure.com) and navigate to the resource group you just created. Then click on the Azure Storage Blob you created (type "Storage account") and click on "Blobs" in the **Overview** panel. Two containers have been created: *images* and *models*. Click on *images* to view the images that have been uploaded.
+After successfulling running the above code, you can verify that the data has been uploaded successfully. To check the contents in Azure Storage Blob, go to the [Azure Portal](https://ms.portal.azure.com) and navigate to the resource group you just created. Then click on the Azure Storage Blob you created (type "Storage account") and click on "Blobs" in the **Overview** panel. Two containenumpy-1.12.1+mkl-cp35-cp35m-win_amd64rs have been created: *images* and *models*. Click on *images* to view the images that have been uploaded.
 
-To check the contents in DocumentDB, navigate to the resource group you just created. Then click on the DocumentDB you created (type "NoSQL (DocumentDB) account") and click on "Document Explorer" in the left panel. Then select the "image_collection" from the drop-down menu in the right panel and you will see the documents that have been created. Click on any ID to check the contents of that document. In each document the attribute "azureBlobUrl" points to the corresponding image saved on the Blob.
+To check the contents in DocumentDB, navigate to the resource group you just created. Then click on the DocumentDB you created (type "NoSQL (DocumentDB) account") and click on "Document Explorer" in the left panel. Then select "image_collection" from the drop-down menu in the right panel and you will see the documents that have been created. Click on any ID to check the contents of that document. In each document the attribute "azureBlobUrl" points to the corresponding image saved on the Blob.
 
 [Return to Top](#cortana-intelligence-suite-product-detection-from-images-solution)
 
@@ -232,12 +252,17 @@ Double click the ".rdp" file that you downloaded in step [Provision the Microsof
 
 Open a web browser on the DSVM and open the [GitHub repo](https://github.com/Azure/cortana-intelligence-product-detection-from-images). Download the repository by clicking on the **Clone or download** button of the GitHub repository and then **Download ZIP**. Unzip the downloaded file.
 
-In otechnical_deployment/train_model/resources/python35_64bit_requirements" and make a note of it. Open a command window and type the following:
+Go to the [Unofficial Windows Binaries for Python Extension Packages site](http://www.lfd.uci.edu/~gohlke/pythonlibs/) to download the following python-wheel and save it in the folder "technical_deployment/train_model/resources/python35_64bit_requirements."
+```
+numpy-1.12.1+mkl-cp35-cp35m-win_amd64
+```
+
+Locate the folder for "technical_deployment/train_model/resources/python35_64bit_requirements" , then open a command window and type the following:
 
 ````bash
-conda create -n shtge2e python=3.5
-activate shtge2e
 cd <path-to-resources/python35_64bit_requirements>
+conda create -n cntk-py35 python=3.5
+activate cntk-py35
 pip install -r requirements.txt
 ````
 
@@ -257,8 +282,8 @@ In addition, use today's date as value for `model_version` in the format of `yyy
 Check the folder "technical_deployment/train_model/data/grocery" and confirm that it is empty. Open a command window and type the following to download data.
 
 ````bash
-activate shtge2e
 cd <path-to-data_management-folder>
+activate cntk-py35
 python 2_download_data_train.py
 ````
 
@@ -266,11 +291,16 @@ You can verify that the data have been downloaded successfully by exploring the 
 
 ### Train the Model
 
-Open a command window and type the following to train the model. You can learn more about the models from the detailed descriptions in the "train_model" folder.
+Download the file *AlexNet.model* from [here](https://www.cntk.ai/Models/AlexNet/AlexNet.model) and place it into the subfolder *technical_deployment/train_model/resources/cntk*.
+
+Open a command window and type the following to train the model. It takes about 1 minutes to run "4_trainSVM.py" and the other scripts completes within seconds.
+
+You can learn more about the models from the detailed descriptions in the "train_model" folder's README file. Notice however the prerequisites as described there are not relevant here.
+
 
 ````bash
-activate shtge2e
 cd <path-to-train_model-folder>
+activate cntk-py35
 python 1_computeRois.py
 python 2_cntkGenerateInputs.py
 python 3_runCntk.py
@@ -283,12 +313,12 @@ python 5_visualizeResults.py
 
 Once you're satisfied with the trained model, you can save its parameters to Blob for future reference. You can also save the performance metrics to DocumentDB. To do these, open a command window and run the following commands.
 
-````bash
-activate shtge2e
+```bash
 cd <path-to-technical_deployment\data_management-folder>
-python 4_upload_model.py
-python 5_upload_performance.py
-````
+activate cntk-py35
+python 3_upload_model.py
+python 4_upload_performance.py
+```
 
 After you run these commands successfully, the model parameters will be saved in a folder named after your model_version in the **models** container of your Blob account and the performance metrics will be saved in the collection **performance_collection** within the database **detection_db** of your DocumentDB account.
 
@@ -296,7 +326,29 @@ After you run these commands successfully, the model parameters will be saved in
 
 ## Deploy a Web Service
 
-Copy all files from the "train_model" folder into the "web_service" folder. Also copy the "config.py" script from the "data_management" folder into the "web_service" folder. Open the "index.html" file in the folder "/web_service/WebApp/templates" from a text editor and replace "lzimages" with your **unique string** in the line `uploadPhotos('http://lzimages.azurewebsites.net/api/uploader')`
+1. Go to the [CNTK release page](https://github.com/Microsoft/CNTK/releases) and download "CNTK for Windows v.2.0 Beta 11 CPU only", rename this to "cntk.zip" and put this in the "technical_deployment/web_service" foler.
+2. Go to the [Unofficial Windows Binaries for Python Extension Packages site](http://www.lfd.uci.edu/~gohlke/pythonlibs/) to download the following python-wheel and save it in the folder "technical_deployment/web_service/Wheels."
+```
+numpy-1.12.1+mkl-cp35-cp35m-win_amd64
+```
+3. Open a command window and type the following to copy files.
+```bash
+cd <path-to-data_management-folder>
+activate cntk-py35
+python 5_copy_web_service_data.py
+```
+4. Now go to folder "technical_deployment/web_service" and deploy the web service by running the following commands. Make sure to replace the following fields with your own values: "your.email@address.com" with your email,"your name" with your name, and "your Git url" with [Git clone url] that you saved in your memo file. Enter your username and password for the Web App when prompted. This process takes about 3 minutes for uploading data and 10 minutes for deploying web service.
+```bash
+cd <path-to-web_service-folder>
+git init
+git config --global user.email "your.email@address.com"
+git oonfig --global user.name "your name"
+git add -A
+git commit -m "Initialize web service"
+git remote add azure "your Git url"
+git push azure master
+```
+5. Once the deployment is successful, you can open the URL (not the Git clone url) that you saved in your memo file. Upload an image for scoring from the "technical_deployment/data_management/score_images" folder. You should get a scored image within a minute.
 
 [Return to Top](#cortana-intelligence-suite-product-detection-from-images-solution)
 
@@ -318,7 +370,7 @@ Power BI is used to monitor model performance and provide intelligence on the un
 
         [![Figure 5][pic5]][pic5] 
 
-    1. In the pop-up window for Advanced Editor, replace all "flimage01" values with your "unique string" (DocumentDB database name). This process is shown in the following two figures, which assumes that the unique string is "flimage01". (You should use the name of your own database.) Click "Done" after making the changes.
+    1. In the pop-up window for Advanced Editor, replace all "lzimage01" values with your "unique string" (DocumentDB database name). This process is shown in the following two figures, which assumes that the unique string is "flimage01". (You should use the name of your own database.) Click "Done" after making the changes.
     
 	Before
         [![Figure 6][pic6]][pic6]
@@ -326,7 +378,7 @@ Power BI is used to monitor model performance and provide intelligence on the un
 	After        
         [![Figure 7][pic7]][pic7] 
 
-    1. With the same Query (e.g., average_precision) selected, click on "Edit Credentials" and enter your your credentials for accessing your database (recorded in the DocumentDB memo table). Then click on "Connect" as shown in the following figures.
+    1. With the same Query (e.g., average_precision) selected, click on "Edit Credentials" and enter your your credentials for accessing your database (recorded in the DocumentDB memo table). Then click on "Connect" as shown in the following figures. 
 
         Click on "Edit Credentials"
         [![Figure 8][pic8]][pic8]
@@ -334,14 +386,14 @@ Power BI is used to monitor model performance and provide intelligence on the un
         Enter account key and click on "Connect"
         [![Figure 9][pic9]][pic9]
 
-    1. The data for your table should be displayed if the connection information was correct, as in the following figure.
+    1. The data for your table should be displayed if the connection information was correct, as in the following figure. It's OK if your values don't match those in the screenshot.
 
         [![Figure 10][pic10]][pic10]
 
-    1. Update the other Queries by replacing "lzimage01" with the name of your database.
+    1. Update the other Queries by replacing "lzimage01" with the name of your database. This is NOT necessary for queries "roc_combined", "roc_thresh_precision", "roc_thresh_recall", and "roc_combined_vertical."
     1. Click on the "Close & Apply" ribbon after all Queries have been updated.
     
-You should now see multiple tabs in Power BI Desktop. The "Average Precision" tab shows average precision by class for different model versions. The "Precision and Recall for Single Model" tab displays precision and recall by threshold values. The "Precision and Recall for Multiple Models" tab displays precision and recall separately so that you can compare multiple models. The "Objects" tab provides summary on objects detected.
+You should now see multiple tabs in Power BI Desktop. The "Precision vs Recall" shows that the performance of the model for the test dataset is good. The "Average Precision" tab shows average precision by class. The "Objects" tab provides summary on objects detected through the web service. So you'll need to use the web service at least once in order to have information on this tab. More information about them can be found in the descriptions in each tab.
 
 ### Publish the Report
 
@@ -360,45 +412,48 @@ Now we can publish the report into Power BI online to easily share with others:
 1. Pin the page to a new dashboard named "Product Detection Dashboard" as shown in the following figure.
 [![Figure 14][pic14]][pic14]
 
-1. Pin the remaining 3 tabs using the same approach: Churn Rate Drill Down, Sales Overview, and Machine Learning. 
-1. Locate the newly created "Customer Churn Dashboard" under Dashboards group. You can share it with others by clicking on the Share button, as shown in the following figure.
+1. Pin the remaining tabs using the same approach.
+1. Locate the newly created "Product Detection Dashboard" under Dashboards group. You can share it with others by clicking on the Share button, as shown in the following figure.
 [![Figure 15][pic15]][pic15]
 
-At this point, you have a working solution that scores images and monitor detections. As you gather more data, model performance can be improved by retraining the model. The following section describes how you can do this.
 
 [Return to Top](#cortana-intelligence-suite-product-detection-from-images-solution)
 
 ## Retrain Models
 
-After scoring some images with the web service, you might want to retrain the model by making use of these additional images. To do that we will following these steps:
+At this point, you have a working solution that can used to scores images and monitor model performance. As you gather more data, model performance can be improved by retraining the model using the new data. To do that we will following these steps:
 
-- Download the images from DocumentDB and Blob to the DSVM. You can use a specific new image or a group of them. In this demo we'll be downloading all images that have been processed by the web service.
-- Add manual annotations.
-- Save the manual annotations.
-- Retrain the model using historic data and the newly annotated images.
-- Save the retrained model
+- Download the images from DocumentDB and Blob to the DSVM. You can use a specific new image or a group of them. In this demo we'll be downloading all images that have been processed by the web service
+- Add manual annotations
+- Save the manual annotations
+- Retrain the model using historic data and the newly annotated images
+- Save and deploy the retrained model
 
 The downloaded images will be saved in a folder named "livestream" under the folder "technical_deployment/train_model/data/grocery." This folder will be generated by the script. To download the images, open a command window and run the following commands:
 
 ````bash
-activate shtge2e
-cd <path-to-technical_deployment\data_management-folder>
-python 3_1_annotation_download_data.py
+cd <path-to-data_management-folder>
+activate cntk-py35
+python 6_annotation_download_data.py
 ````
 
 Open the folder "technical_deployment/train_model/data/grocery/livestream" to make sure that the images have been downloaded successfully. If you want to view a scored image, you can modify the "visualize_local.py" script under the "technical_deployment\train_model" folder so that "sub_dir" and "file_name" point to the image you want to view. Then run the following commands:
 
 ````bash
-activate shtge2e
-cd <path-to-technical_deployment\train_model-folder>
-python visualize_local.py
+cd <path-to-train_model-folder>
+activate cntk-py35
+python A_visualize_local.py
 ````
 
-Two scripts are provided for making annotations, one for drawing object boundaries and the other for adding labels to the boundaries. Delete the existing files that end with ".bboxes.tsv" or ".bboxes.labels.tsv" to allow the use of the annotation scripts. Run the following commands to draw boundaries, pressing 'n' when you are done with one image, 'u' when you want to undo (i.e. remove) the last rectangle, and 'q' when you want to quit the annotation tool. The script will quit once all images have been annotated.
+Two scripts are provided for making annotations, one for drawing object boundaries and the other for adding labels to the boundaries. Delete from the "technical_deployment/train_model/data/grocery/livestream" folder the existing files that end with ".bboxes.tsv" or ".bboxes.labels.tsv" to allow the use of the annotation scripts.
+
+Open the script "A1_annotateImages.py" and change the value of "imagesToAnnotateDir" to be the "livestream" folder. Do the same for the script "A2_annotateBboxLabels.py."
+
+Run the following commands to draw boundaries, pressing 'n' when you are done with one image, 'u' when you want to undo (i.e. remove) the last rectangle, and 'q' when you want to quit the annotation tool. The script will quit once all images have been annotated.
 
 ````bash
-activate shtge2e
 cd <path-to-train_model-folder>
+activate cntk-py35
 python A1_annotateImages.py
 ````
 
@@ -411,16 +466,16 @@ python A2_annotateBboxLabels.py
 Once you are satistified with the annotations, save them to DocumentDB by running the following commands.
 
 ````bash
-activate shtge2e
 cd <path-to-technical_deployment\data_management-folder>
-python 3_2_annotation_update.py
+activate cntk-py35
+python 7_annotation_update.py
 ````
 
-To use the additional annotations for training, copy the images (.jpg), the boxes (.bboxes.tsv), and the labels (.bboxes.labels.tsv) from the "livestream" folder to the "positive" folder. Now you can repeate the same process for training models (section [Train the Model](#train-the-model)), saving models (section [Save the Model](#save-the-model)), deploy web service (section [Deploy a Web Service](#deploy-a-web-service)), and monitoring model performance (section [Monitor Model Performance](#monitor-model-performance)).
+To use the additional annotations for training, copy the images (.jpg), the boxes (.bboxes.tsv), and the labels (.bboxes.labels.tsv) from the "livestream" folder to the "positive" folder. Now you can repeat the same process for training models (section [Train the Model](#train-the-model)), saving models (section [Save the Model](#save-the-model)), deploy web service (section [Deploy a Web Service](#deploy-a-web-service)), and monitoring model performance (section [Monitor Model Performance](#monitor-model-performance)).
 
-If you have deleted the DSVM, you can start from configuring the DSVM (section [Configure the DSVM](#configure-the-dsvm)). 
+If you have deleted the DSVM, you can start by configuring the DSVM (section [Configure the DSVM](#configure-the-dsvm)).
 
-If you have the same DSVM but have deleted the data from previous training, you can start from downloading data (section [Download Data](#download-data)).
+If you have the same DSVM but have deleted the data from previous training, you can start by downloading data (section [Download Data](#download-data)).
 
 [Return to Top](#cortana-intelligence-suite-product-detection-from-images-solution)
 

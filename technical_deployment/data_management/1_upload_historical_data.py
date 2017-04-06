@@ -112,6 +112,7 @@ for dirname, dirnames, filenames in os.walk(config.image_folder_onprem):
             ).isoformat()
             
             roi_annotated = []
+            roi_annotated_dict = {}
             # annotate source info
             annotated_by_user = None
             annotated_by_model = None
@@ -144,6 +145,7 @@ for dirname, dirnames, filenames in os.walk(config.image_folder_onprem):
                 "annotatedByModel": annotated_by_model,
                 "annotatedDate": annotated_date,
                 "roiAnnotated": roi_annotated, 
+                "roiAnnotatedDict": roi_annotated_dict, 
                 "roiSelectiveSearch":[
                 ],      
                 "annotationHistory": [

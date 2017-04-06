@@ -32,32 +32,33 @@ ref_dir = os.path.dirname(os.path.realpath(sys.argv[0]))
 #   positive, negative, and testImage; make sure it exists
 image_folder_onprem = ref_dir + "\\onprem"
 # folder where DocDB data and Azure Blob images are downloaded into
-dir_download = ref_dir + "\\..\\trainModel\\data\\grocery"
+dir_download = ref_dir + "\\..\\train_model\\data\\grocery"
 # folder for manually annotated images, make sure it exists
-annotated_image_folder = ref_dir + "\\..\\trainModel\\data\\grocery\\livestream"
-# file that has model performance data, make sure it exists
-performance_file = ref_dir + "\\..\\trainModel\\performance.txt"
+annotated_image_folder = ref_dir + "\\..\\train_model\\data\\grocery\\livestream"
+# files that have model performance data, make sure they exist
+ap = ref_dir + "\\..\\train_model\\evalResults.tsv"
+precision_recall = ref_dir + "\\..\\train_model\\precisionRecalls.tsv"
 # folder where trained model is saved, make sure it exists
-model_folder_local_a = ref_dir + "\\..\\trainModel\\proc\\grocery\\models"
-model_folder_local_b = ref_dir + "\\..\\trainModel\\proc\\grocery\\trainedSvm"
+model_folder_local_a = ref_dir + "\\..\\train_model\\proc\\grocery\\models"
+model_folder_local_b = ref_dir + "\\..\\train_model\\proc\\grocery\\trainedSvm"
+# folder for model training, make sure it exists
+train_model_folder = ref_dir + "\\..\\train_model"
+# folder for web app, make sure it exists
+web_service_folder = ref_dir + "\\..\\web_service\\WebApp"
 
 # folder where Azure Blob saved models are downloaded into
 model_folder_download = ref_dir + "\\modeldownload"
 
 # model version
 model_version = "20170327"
-# threshold for calculating mAP
-threshold = 0.3
 
 # annotation user
 annotated_by_user_history = "power user"
 annotated_by_user_update = "user1"
 
 # Azure blob account info
-# blob_account_name = "lixuntestblob2"
-# blob_account_key = "+GJHKY0eOaJZIrusDy2Lt29t6MzWkzMrQTXOPTXZ0WJFHTprMfw6I2qYJ9OMgscb/pf0x3lF07IWJE8bhjwbQw=="
-blob_account_name = "lzimages"
-blob_account_key = "+aou0UIdgr07gQpZjyHFbPSm5OUqoKHUY9gyTWiyvkxWkmDC7aOem2/rJXgUOtG7H38iEOv53sfT/LE/cSJczw=="
+blob_account_name = "lzimage3"
+blob_account_key = "8y7ttvPo3UVEJXgcWt0bLPpzSqEH4isHcElw4w6D4LFVeybdnz9QGq7cKE5zZEZTNAofB4l9KJ3cPlEETQbxSQ=="
 
 # container for images
 blob_container_image = "images" # no need to change this
@@ -65,8 +66,8 @@ blob_container_image = "images" # no need to change this
 blob_container_model = "models" # no need to change this
 
 # DocumentDB info
-documentdb_host = "https://lzimages.documents.azure.com:443/"
-documentdb_key = "cc8cWc4sRqqlATisTr5MajSD8a54zggYt9Qy45GemnA5dQNRI7vECIIik3Hev0OTzz971zLTatmcQt3pbOntpw=="
+documentdb_host = "https://lzimage3.documents.azure.com:443/"
+documentdb_key = "uUJkNr5C7yZx1Gj6W47s4PoC2QpxwKJxja7NyNftv2ZhpVcIQV2E9YRDDB0UTbSi4CL2kgV6HPGfaH9QeCwYXQ=="
 documentdb_database = "detection_db" # no need to change this
 # collection for annotations, labels, metadata
 documentdb_collectoion_image = 'image_collection' 
