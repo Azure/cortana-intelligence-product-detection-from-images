@@ -141,6 +141,7 @@ Click on "Refresh" from the resource group's **Overview** pane so that the new r
 Get the primary key for the DocumentDB account, which will be used in the Python scripts to upload and download data, by following these steps:
 
 1. Click the created DocumentDB. In the new panel, click on **keys**.
+1. Ensure that the "Read-write keys" tab is selected.
 1. In the new panel, click the "Click to copy" icon next to `URI` and paste the key into your memo. Repeat the same process for `PRIMARY KEY.`
 
 | **DocumentDB Account** |                     |
