@@ -25,6 +25,25 @@
 import os 
 import sys
 
+#######################################################################
+# Modify these values per the technical deployment guide instructions #
+#######################################################################
+
+# Azure blob account info
+blob_account_name = "lzimage3"
+blob_account_key = "8y7ttvPo3UVEJXgcWt0bLPpzSqEH4isHcElw4w6D4LFVeybdnz9QGq7cKE5zZEZTNAofB4l9KJ3cPlEETQbxSQ=="
+
+# DocumentDB info
+documentdb_host = "https://lzimage3.documents.azure.com:443/"
+documentdb_key = "uUJkNr5C7yZx1Gj6W47s4PoC2QpxwKJxja7NyNftv2ZhpVcIQV2E9YRDDB0UTbSi4CL2kgV6HPGfaH9QeCwYXQ=="
+
+# model version
+model_version = "20170327"  # format: YYYYMMDD
+
+#######################################
+# No need to change the values below! #
+#######################################
+
 # reference directory, make sure it exists
 # ref_dir = "C:\\Users\\lixzhan\\Desktop\\testing"
 ref_dir = os.path.dirname(os.path.realpath(sys.argv[0]))
@@ -49,25 +68,17 @@ web_service_folder = ref_dir + "\\..\\web_service\\WebApp"
 # folder where Azure Blob saved models are downloaded into
 model_folder_download = ref_dir + "\\modeldownload"
 
-# model version
-model_version = "20170327"
-
 # annotation user
 annotated_by_user_history = "power user"
 annotated_by_user_update = "user1"
 
-# Azure blob account info
-blob_account_name = "lzimage3"
-blob_account_key = "8y7ttvPo3UVEJXgcWt0bLPpzSqEH4isHcElw4w6D4LFVeybdnz9QGq7cKE5zZEZTNAofB4l9KJ3cPlEETQbxSQ=="
-
+# More Azure blob account info
 # container for images
 blob_container_image = "images" # no need to change this
 # container for models
 blob_container_model = "models" # no need to change this
 
-# DocumentDB info
-documentdb_host = "https://lzimage3.documents.azure.com:443/"
-documentdb_key = "uUJkNr5C7yZx1Gj6W47s4PoC2QpxwKJxja7NyNftv2ZhpVcIQV2E9YRDDB0UTbSi4CL2kgV6HPGfaH9QeCwYXQ=="
+# More DocumentDB info
 documentdb_database = "detection_db" # no need to change this
 # collection for annotations, labels, metadata
 documentdb_collectoion_image = 'image_collection' 

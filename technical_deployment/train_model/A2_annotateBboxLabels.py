@@ -9,7 +9,7 @@ locals().update(importlib.import_module("PARAMETERS").__dict__)
 ####################################
 # Parameters
 ####################################
-imagesToAnnotateDir = "C:/Users/pabuehle/Desktop/newImgs/"
+imagesToAnnotateDir = "./data/grocery/livestream"
 
 #no need to change these
 boxWidth = 10
@@ -48,15 +48,13 @@ for objectIndex,objectName in enumerate(objectNames):
 imgFilenames = getFilesInDirectory(imagesToAnnotateDir, ".jpg")
 for imgIndex, imgFilename in enumerate(imgFilenames):
     print("imgIndex={}, imgFilename={}".format(imgIndex, imgFilename))
-    labelsPath = imagesToAnnotateDir + "/" + imgFilename[:-4] + ".bboxes.labels.tsv"
-    if os.path.exists(labelsPath):
-        continue
+    labelsPath = os.path.join(imagesToAnnotateDir, imgFilename[:-4] + ".bboxes.labels.tsv")
 
     #load image and bboxes
-    imgPath = imagesToAnnotateDir + "/" + imgFilename
+    imgPath = os.path.join(imagesToAnnotateDir, imgFilename)
     print("imgIndex = {}, imgPath = {}".format(imgIndex, imgPath))
     img = imread(imgPath)
-    rectsPath = imgPath = imagesToAnnotateDir + "/" + imgFilename[:-4] + ".bboxes.tsv"
+    rectsPath = os.path.join(imagesToAnnotateDir, imgFilename[:-4] + ".bboxes.tsv")
     rects = readTable(rectsPath)
     rects = [ToIntegers(rect) for rect in rects]
 

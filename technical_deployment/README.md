@@ -162,8 +162,10 @@ Get the primary key for the DocumentDB account, which will be used in the Python
 8. Make sure the selected resource group is the one you just created. If not, choose the resource group you created for this solution.
 9. Leaving the default values for all other fields, click the **OK** button at the bottom.
 10. On the ***Size*** panel that shows up, choose a size and click the **Select** button.
-11. On the ***Settings*** panel that shows up, use the default values for all fields and click the **OK** button.
-12. On the ***Summary*** panel that shows up, double-check it and click the **OK** button.
+11. On the ***Settings*** panel that appears:
+    - check that the "Storage account" and "Diagnostics storage account" fields have been auto-filled with the names of new storage accounts, as indicated by the presence of "(new) " in the account names. If not, click on each entry and choose the "+ Create new" option, assigning a unique account name for each.
+    - Leave the default values for all other fields and click the **OK** button.
+12. On the ***Summary*** panel that shows up, double-check your selections and click the **OK** button.
 13. On the ***Buy*** panel that shows up, click the **Purchase** button. You can ignore the warning message `The highlighted Marketplace purchase(s) are not covered by your Azure credits, and will be billed separately.`
 14. Go back to your resource group overview and wait until the DSVM is deployed as reported in the Notifications area.
 
@@ -439,7 +441,7 @@ activate cntk-py35
 python 6_annotation_download_data.py
 ````
 
-Open the folder "technical_deployment/train_model/data/grocery/livestream" to make sure that the images have been downloaded successfully. If you want to view a scored image, you can modify the "visualize_local.py" script under the "technical_deployment\train_model" folder so that "sub_dir" and "file_name" point to the image you want to view. Then run the following commands:
+Open the folder "technical_deployment/train_model/data/grocery/livestream" to make sure that the images have been downloaded successfully. If you want to view a scored image, you can modify the "visualize_local.py" script under the "technical_deployment\train_model" folder so that the variable "file_name" indicates the image you want to view. Then run the following commands:
 
 ````bash
 cd <path-to-train_model-folder>
@@ -447,9 +449,7 @@ activate cntk-py35
 python A_visualize_local.py
 ````
 
-Two scripts are provided for making annotations, one for drawing object boundaries and the other for adding labels to the boundaries. Delete from the "technical_deployment/train_model/data/grocery/livestream" folder the existing files that end with ".bboxes.tsv" or ".bboxes.labels.tsv" to allow the use of the annotation scripts.
-
-Open the script "A1_annotateImages.py" and change the value of "imagesToAnnotateDir" to be the "livestream" folder. Do the same for the script "A2_annotateBboxLabels.py."
+Two scripts are provided for making annotations: one for defining the regions of interest (i.e., a bounding box around each object) and the other for adding labels to the regions of interest.
 
 Run the following commands to draw boundaries, pressing 'n' when you are done with one image, 'u' when you want to undo (i.e. remove) the last rectangle, and 'q' when you want to quit the annotation tool. The script will quit automatically once all images have been annotated.
 
@@ -459,7 +459,7 @@ activate cntk-py35
 python A1_annotateImages.py
 ````
 
-Continuing in the above command window, run the following command to add labels.
+Continuing in the above command window, run the following command to add labels. (Press the appropriate button at left to label each ROI.)
 
 ````bash
 python A2_annotateBboxLabels.py

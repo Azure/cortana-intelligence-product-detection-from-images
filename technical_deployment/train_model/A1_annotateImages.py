@@ -6,11 +6,11 @@ locals().update(importlib.import_module("PARAMETERS").__dict__)
 ####################################
 # Parameters
 ####################################
-imagesToAnnotateDir = "C:/Users/pabuehle/Desktop/newImgs/"
+imagesToAnnotateDir = "./data/grocery/livestream"
 
 #no need to change these params
 drawingMaxImgSize = 1000.0
-annotationsFile = resultsDir + "annotations.tsv"
+annotationsFile = os.path.join(resultsDir, "annotations.tsv")
 minNrPixels = -1
 
 
@@ -82,7 +82,7 @@ else:
 #loop over each image and get annotation
 for imgFilenameIndex,imgFilename in enumerate(imgFilenames):
     print("imgFilenameIndex = {}, imgFilename = {}".format(imgFilenameIndex, imgFilename))
-    imgPath = imagesToAnnotateDir + imgFilename
+    imgPath = os.path.join(imagesToAnnotateDir, imgFilename)
     print("Processing image {0} of {1}: {2}".format(imgFilenameIndex, len(imgFilenames), imgPath))
     bBoxPath = imgPath[:-4] + ".bboxes.tsv"
 
@@ -95,9 +95,6 @@ for imgFilenameIndex,imgFilename in enumerate(imgFilenames):
 
     #load existing ground truth if provided
     cv2GetRectangle_global_bboxes = []
-    if os.path.exists(bBoxPath):
-        print("Skipping image since ground truth already exists: %s." % imgPath)
-        continue
 
     #draw image
     imageUnscaled = imread(imgPath)
