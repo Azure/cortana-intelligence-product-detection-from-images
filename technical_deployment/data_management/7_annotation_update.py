@@ -19,7 +19,7 @@ from helper import merge_roi_label
 # =============================================================================
 # Establish links to DocDB
 # =============================================================================
-client = document_client.DocumentClient(config.documentdb_host, 
+client = document_client.DocumentClient(config.documentdb_uri, 
                                         {'masterKey': config.documentdb_key})
 
 # Read databases and take first since id should not be duplicated.

@@ -38,8 +38,8 @@ from helper import merge_roi_label
 # Create containers and collections
 # =============================================================================
 # Establish a link to blob
-block_blob_service = BlockBlobService(account_name=config.blob_account_name, 
-                                      account_key=config.blob_account_key)
+block_blob_service = BlockBlobService(account_name=config.storage_account_name, 
+                                      account_key=config.storage_account_key)
 
 
 # Create a container for saving images
@@ -49,7 +49,7 @@ block_blob_service.create_container(config.blob_container_image)
 block_blob_service.create_container(config.blob_container_model)
 
 # Establish a link to DocDB
-client = document_client.DocumentClient(config.documentdb_host, 
+client = document_client.DocumentClient(config.documentdb_uri, 
                                         {'masterKey': config.documentdb_key})
 
 # Create DocumentDB database
@@ -94,7 +94,7 @@ for dirname, dirnames, filenames in os.walk(config.image_folder_onprem):
                 content_settings=ContentSettings(content_type='image/png')
             )
             
-            blob_url = ("https://" + config.blob_account_name  
+            blob_url = ("https://" + config.storage_account_name  
                         + ".blob.core.windows.net/"  
                         + config.blob_container_image + "/" + blob_name)
             

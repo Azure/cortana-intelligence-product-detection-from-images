@@ -16,7 +16,7 @@ import pydocumentdb.document_client as document_client
 # Establish links to DocDB
 # =============================================================================
 # Establish a link to DocDB
-client = document_client.DocumentClient(config.documentdb_host, 
+client = document_client.DocumentClient(config.documentdb_uri, 
                                         {'masterKey': config.documentdb_key})
                                         
 # Read databases and take first since id should not be duplicated.

@@ -30,11 +30,11 @@ import sys
 #######################################################################
 
 # Azure blob account info
-blob_account_name = "lzimage3"
-blob_account_key = "8y7ttvPo3UVEJXgcWt0bLPpzSqEH4isHcElw4w6D4LFVeybdnz9QGq7cKE5zZEZTNAofB4l9KJ3cPlEETQbxSQ=="
+storage_account_name = "lzimage3"
+storage_account_key = "8y7ttvPo3UVEJXgcWt0bLPpzSqEH4isHcElw4w6D4LFVeybdnz9QGq7cKE5zZEZTNAofB4l9KJ3cPlEETQbxSQ=="
 
 # DocumentDB info
-documentdb_host = "https://lzimage3.documents.azure.com:443/"
+documentdb_uri = "https://lzimage3.documents.azure.com:443/"
 documentdb_key = "uUJkNr5C7yZx1Gj6W47s4PoC2QpxwKJxja7NyNftv2ZhpVcIQV2E9YRDDB0UTbSi4CL2kgV6HPGfaH9QeCwYXQ=="
 
 # model version

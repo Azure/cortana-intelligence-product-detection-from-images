@@ -23,11 +23,11 @@ import pydocumentdb.document_client as document_client
 app = Flask(__name__)
 
 # Establish a link to blob
-block_blob_service = BlockBlobService(account_name=config.blob_account_name,
-                                      account_key=config.blob_account_key)
+block_blob_service = BlockBlobService(account_name=config.storage_account_name,
+                                      account_key=config.storage_account_key)
 
 # Establish a link to DocDB
-client = document_client.DocumentClient(config.documentdb_host,
+client = document_client.DocumentClient(config.documentdb_uri,
                                         {'masterKey': config.documentdb_key})
 
 # Read databases and take first since id should not be duplicated.
@@ -148,7 +148,7 @@ def save_file(file):
         content_settings=ContentSettings(content_type='image/png')
     )
 
-    blob_url = ("https://" + config.blob_account_name
+    blob_url = ("https://" + config.storage_account_name
                 + ".blob.core.windows.net/"
                 + config.blob_container_image + "/" + blob_name)
     print(blob_url)

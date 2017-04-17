@@ -21,11 +21,11 @@ from helper import save_roi_label_score, merge_roi_label_score
 # Establish links to Azure Blob and DocDB
 # =============================================================================
 # Establish a link to blob
-block_blob_service = BlockBlobService(account_name=config.blob_account_name, 
-                                      account_key=config.blob_account_key)
+block_blob_service = BlockBlobService(account_name=config.storage_account_name, 
+                                      account_key=config.storage_account_key)
 
 # Establish a link to DocDB
-client = document_client.DocumentClient(config.documentdb_host, 
+client = document_client.DocumentClient(config.documentdb_uri, 
                                         {'masterKey': config.documentdb_key})
 
 # Read databases and take first since id should not be duplicated.
@@ -79,7 +79,7 @@ for _, document in enumerate ((
                 
     # download an image to a local folder
     blob_url = document["azureBlobUrl"]
-    blob_url_header = ("https://" + config.blob_account_name  
+    blob_url_header = ("https://" + config.storage_account_name  
                         + ".blob.core.windows.net/"  
                         + config.blob_container_image + "/")
     print(blob_url_header)

@@ -16,8 +16,8 @@ from azure.storage.blob import BlockBlobService
 # =============================================================================
 # Establish links to Azure Blob
 # =============================================================================
-block_blob_service = BlockBlobService(account_name=config.blob_account_name, 
-                                      account_key=config.blob_account_key)
+block_blob_service = BlockBlobService(account_name=config.storage_account_name, 
+                                      account_key=config.storage_account_key)
 
 #%% 
 # =============================================================================

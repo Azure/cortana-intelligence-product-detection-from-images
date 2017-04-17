@@ -74,7 +74,7 @@ We suggest you use "[UI]image[N]"  where [UI] is the user's initials and [N] is 
 ### Create an Azure Resource Group
 
 1. Log into the [Azure Management Portal](https://ms.portal.azure.com).
-2. Click the **Resource groups** button on upper left (hover over the buttons to view their names or ), then click the **+Add** button to add a resource group.
+2. Click the **Resource groups** button on upper left (hover over the buttons to view their names), then click the **+Add** button to add a resource group.
 3. Enter your **unique string** for the resource group and choose your subscription.
 4. For **Resource Group Location**, you can choose the one that's closest to you.
 
@@ -122,8 +122,8 @@ Click on "Refresh" from the resource group's **Overview** pane so that the new r
 
 | **Azure Storage Account** |                     |
 |------------------------|---------------------|
-| Storage Account        |[unique string]|
-| Access Key     |[key]             ||
+| Storage Account Name|[unique string]|
+| Storage Account Access Key     |[key]             ||
 
 <a name="docdb"></a>
 ### Create Azure DocumentDB
@@ -134,7 +134,7 @@ Click on "Refresh" from the resource group's **Overview** pane so that the new r
 4. Click **Create** at the bottom of the description panel.
 5. Enter your **unique string** for "ID."
 6. Make sure **DocumentDB** is selected for "NoSQL API."
-7. Make sure the selected resource group is the one you just created. If not, choose the resource group you created for this solution.
+7. Make sure the selected resource group is the one you just created. DocumentDB may not be available for some regions (e.g. "East US") and you can used the system-assigned region if this is the case.
 8. Leaving the default values for all other fields, click the **Create** button at the bottom.
 9. Go back to your resource group overview and wait until DocumentDB is deployed as reported in the Notifications area.
 
@@ -142,39 +142,40 @@ Get the primary key for the DocumentDB account, which will be used in the Python
 
 1. Click the created DocumentDB. In the new panel, click on **keys**.
 1. Ensure that the "Read-write keys" tab is selected.
-1. In the new panel, click the "Click to copy" icon next to `URI` and paste the key into your memo. Repeat the same process for `PRIMARY KEY.`
+1. In the new panel, click the "Click to copy" icon next to `URI` and paste the value into your memo. Repeat the same process for `PRIMARY KEY.`
 
 | **DocumentDB Account** |                     |
 |------------------------|---------------------|
-| URI        |[uri]|
-| Access Key     |[key]             ||
+| DocumentDB URI        |[uri]|
+| DocumentDB Access Key     |[key]             ||
 
 <a name="dsvm"></a>
 ### Provision the Microsoft Data Science Virtual Machine
 
 1. Go to the [Azure Portal](https://ms.portal.azure.com) and navigate to the resource group you just created.
 2. In ***Overview*** panel, click **+Add** to add a new resource. Enter **Data Science Virtual Machine** and hit "Enter" key to search.
-3. Click on **Data Science Virtual Machine** offered by Microsoft (in the "Compute" category).
+3. Click on **Data Science Virtual Machine for Windows** offered by Microsoft (in the "Compute" category).
 4. Click **Create** at the bottom of the description panel.
 5. Enter your **unique string** for "Name."
 6. Enter a user name and save it to your memo file.
 7. Enter your password and confirm it. Then save it to your memo file.
 8. Make sure the selected resource group is the one you just created. If not, choose the resource group you created for this solution.
 9. Leaving the default values for all other fields, click the **OK** button at the bottom.
-10. On the ***Size*** panel that shows up, choose a size and click the **Select** button.
+10. On the ***Size*** panel that shows up, choose a size (DS11_V2 Standard will suffice here). More size options are available by clicking the "View all" link on the "Choose a size" page. Click the **Select** button after making a selection.
 11. On the ***Settings*** panel that appears:
-    - check that the "Storage account" and "Diagnostics storage account" fields have been auto-filled with the names of new storage accounts, as indicated by the presence of "(new) " in the account names. If not, click on each entry and choose the "+ Create new" option, assigning a unique account name for each.
-    - Leave the default values for all other fields and click the **OK** button.
-12. On the ***Summary*** panel that shows up, double-check your selections and click the **OK** button.
-13. On the ***Buy*** panel that shows up, click the **Purchase** button. You can ignore the warning message `The highlighted Marketplace purchase(s) are not covered by your Azure credits, and will be billed separately.`
+    - check that the "Storage account" has been auto-filled with the names of a new storage account, as indicated by the presence of "(new) " in the account name. If it is not auto-filled or "(new) " is not present, click on it and choose the **+ Create new** option, using the auto-filled name or assigning a unique account name to it (e.g. by adding "s" to your **unique string**). Then click the **OK** button.
+    - check that the "Diagnostics storage account" has been auto-filled with the names of a new storage account, as indicated by the presence of "(new) " in the account name. If it is not auto-filled or "(new) " is not present, click on it and choose the **+ Create new** option, using the auto-filled name or assigning a unique account name to it (e.g. by adding "d" to your **unique string**). Then click the **OK** button.
+    - Leave the default values for all other fields and click the **OK** button to return to a **Summary** page.
+12. On the **Summary** panel that shows up, double-check your selections and click the **OK** button.
+13. On the **Buy** panel that shows up, click the **Purchase** button. You can ignore the warning message `The highlighted Marketplace purchase(s) are not covered by your Azure credits, and will be billed separately.`
 14. Go back to your resource group overview and wait until the DSVM is deployed as reported in the Notifications area.
 
 Save your credentials to the memo file.
 
 | **DSVM** |                     |
 |------------------------|---------------------|
-| username        |[username]|
-| password     |[password]  ||
+| DSVM username        |[username]|
+| DSVM password     |[password]  ||
 
 Once the VM is created, you can remote desktop into it using the account credentials that you provided. To get the access link, follow these steps:
 
@@ -192,17 +193,18 @@ Once the VM is created, you can remote desktop into it using the account credent
 6. Make sure the selected resource group is the one you just created. If not, choose the resource group you created for this solution.
 7. Click on "App Service plan/Location" and then **+Create New**.
 8. Enter your **unique string** for "App Service plan."
+9. You can use the system-assigned **Location** value. Not all regions support App service plans so the assigned region may be different from you resource group.
 9. Click on "Pricing tier" and choose "S1 Standard", then click on **Select**.
 10. Click **OK** to confirm the App Service plan.
 11. Click **On** for "Application Insights."
 12. Leaving the default values for all other fields, click the **Create** button at the bottom.
 13. Go back to your resource group overview and wait until the App Service is deployed as reported in the Notifications area. Click **Refresh** in the **Overview** pane. 
 14. Click on the newly deployed App Service (Type "App Service") and you'll see the "Overview" page.
-15. In the left panel click on **Application settings** (in **SETTINGS** group) then selecct "64-bit" for "Platform" and "On" for "Always On." Save the settings by clicking on **Save**.
+15. In the left panel click on **Application settings** (in **SETTINGS** group) then select "64-bit" for "Platform" and "On" for "Always On." Save the settings by clicking on **Save**.
 16. In the left panel click on **Extensions** (in **DEVELOPMENT TOOLS** group) then click **+Add**. In the window that appears, select **Choose Extension** then **Python 3.5.3 x64**. 
 17. Click **OK** to accept the legal terms and **OK** again to install the web app extension. Make sure the extension is installed successfully as reported in the "Notifications" area.
-18. In the left panel, click on **Deployment options** (in **DEPLOYMENT** group), then **Choose Source**, followed by **Local Git Repository**. Leave **Performance Test** as "Not Configured" and click on **OK** to set up the deployment source.
-19. If this is the first time you've deployed an application to Azure, you'll need to set your deployment credentials. To do this, click **Deployment credentials** (in **DEPLOYMENT** group) and select your username and password.
+18. In the left panel, click on **Deployment options** (in **DEPLOYMENT** group), then **Choose Source**, followed by **Local Git Repository**. Leave **Performance Test** as "Not Configured" and click on **OK** to set up the deployment source. Instructions for setting up  your credentials are in next step.
+19. In the left panel, click on **Deployment credentials** (in **DEPLOYMENT** group). Select your deployment username and password and save them to your memo file.
 20. Click **Overview** from the left panel and locate the value for "URL", hover over it and wait for the **Click to copy** button to appear. Click on it to copy the value. Paste it to your memo file.
 21. Click **Overview** from the left panel and locate the value for "Git clone url", hover over it and wait for the **Click to copy** button to appear. Click on it to copy the value. Paste it to your memo file.
 
@@ -210,8 +212,8 @@ Save your credentials to the memo file.
 
 | **Azure App Service** |                     |
 |------------------------|---------------------|
-| username        |[username]
-| password     |[password]  |
+| Deployment username        |[username]
+| Deployment password     |[password]  |
 | URL                     |[URL]  |
 | Git clone url     |[Git clone url]  |
 
@@ -229,9 +231,9 @@ As described in the architecture, we assume that there are some data on your loc
 
 Open the "technical_deployment/data_management/config.py" file from a text editor and provide values for the following fields using the information from your memo file, leaving the other fields as-is:
 
-- `blob_account_name`
-- `blob_account_key`
-- `documentdb_host` (replace "lzimage3" with your **unique string**)
+- `storage_account_name`
+- `storage_account_key`
+- `documentdb_uri` (replace "lzimage3" with your **unique string**)
 - `documentdb_key`
 
 If you already have Python installed, you can keep using your version. Otherwise, download Python 3.5.3 from [Python Software Foundation](https://www.python.org/downloads/) and install it. Then go to the command window and type the following:
@@ -275,9 +277,9 @@ When run successfully, these commands create a virtual environment and activate 
 
 In this step we'll download the images from Blob and labels from DocumentDB. Just like on the local computer, we open the "config.py" script in "technical_deployment/data_management" folder from a text editor and provide values for the following fields using the informaiton from your memo file:
 
-- `blob_account_name`
-- `blob_account_key`
-- `documentdb_host` (replace "lzimage3" with your **unique string**)
+- `storage_account_name`
+- `storage_account_key`
+- `documentdb_uri` (replace "lzimage3" with your **unique string**)
 - `documentdb_key`
 
 In addition, use today's date as value for `model_version` in the format of `yyyymmdd`. Leave the other fields as-is.
@@ -334,7 +336,7 @@ After you run these commands successfully, the model parameters will be saved in
 ```
 numpy-1.12.1+mkl-cp35-cp35m-win_amd64
 ```
-    Save a copy of the file in the folder technical_deployment/web_service/Wheels". (You may have already placed a copy of this file in the "technical_deployment/train_model/resources/python35_64bit_requirements" folder.)
+Save a copy of the file in the folder "technical_deployment/web_service/Wheels". (You may have already placed a copy of this file in the "technical_deployment/train_model/resources/python35_64bit_requirements" folder.)
 3. Open a command window and type the following to copy the trained model and supporting files to the web service folder:
 ```bash
 cd <path-to-data_management-folder>
@@ -397,7 +399,7 @@ Power BI is used to monitor model performance and provide intelligence on the un
     1. Update the other Queries by replacing "lzimage01" with the name of your database. This is NOT necessary for the queries "roc_combined", "roc_thresh_precision", "roc_thresh_recall", and "roc_combined_vertical."
     1. Click on the "Close & Apply" ribbon after all Queries have been updated.
     
-You should now see multiple tabs in Power BI Desktop. The "Precision vs Recall" shows that the performance of the model for the test dataset is good. The "Average Precision" tab shows average precision by class. The "Objects" tab provides a summary of objects detected through the web service: you'll need to use the web service at least once in order to have information on this tab. More information about the tabs' contents can be found in the descriptions in each tab.
+You should now see multiple tabs in Power BI Desktop. The "Precision vs Recall" shows that the performance of the model for the test dataset is good. The "Average Precision" tab shows average precision by class. The "Objects" tab provides a summary of objects detected through the web service. So you'll need to use the web service at least once in order to have information on this tab. More information about the tabs' contents can be found in the descriptions in each tab.
 
 ### Publish the Report
 
@@ -473,7 +475,7 @@ activate cntk-py35
 python 7_annotation_update.py
 ````
 
-To use the additional annotations for training, copy the images (.jpg), the boxes (.bboxes.tsv), and the labels (.bboxes.labels.tsv) from the "livestream" folder to the "positive" folder. Now you can repeat the steps given above for to train a new model (section [Train the Model](#train-the-model)), save the model (section [Save the Model](#save-the-model)), deploy a web service (section [Deploy a Web Service](#deploy-a-web-service)), and monitor the model's performance (section [Monitor Model Performance](#monitor-model-performance)).
+To use the additional annotations for training, copy the images (.jpg), the boxes (.bboxes.tsv), and the labels (.bboxes.labels.tsv) from the "livestream" folder to the "positive" folder. Now you can repeat the steps given above to train a new model (section [Train the Model](#train-the-model)), save the model (section [Save the Model](#save-the-model)), deploy a web service (section [Deploy a Web Service](#deploy-a-web-service)), and monitor the model's performance (section [Monitor Model Performance](#monitor-model-performance)).
 
 You may wish to delete the DSVM or training data in between rounds of training and retraining (which, in practice, may be weeks or months apart). If you have deleted the DSVM, you can start retraining by configuring a new DSVM (section [Configure the DSVM](#configure-the-dsvm)). If you have kept the DSVM but have deleted the data from the previous training, you can start by downloading the data (section [Download Data](#download-data)).
 
