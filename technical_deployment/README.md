@@ -11,7 +11,7 @@
    - [Provision the Microsoft Data Science Virtual Machine](#dsvm)
    - [Create Web App](#webapp)
 - [Manage Historic Data](#manage-historic-data)
-- [Train a Model on DSVM](#train-a-model-on-dsvm)
+- [Train a Model on the DSVM](#train-a-model-on-the-dsvm)
    - [Configure the DSVM](#configure-the-dsvm)
    - [Download Data](#download-data)
    - [Train the Model](#train-the-model)
@@ -337,6 +337,7 @@ After you run these commands successfully, the model parameters will be saved in
 numpy-1.12.1+mkl-cp35-cp35m-win_amd64
 ```
 Save a copy of the file in the folder "technical_deployment/web_service/Wheels". (You may have already placed a copy of this file in the "technical_deployment/train_model/resources/python35_64bit_requirements" folder.)
+
 3. Open a command window and type the following to copy the trained model and supporting files to the web service folder:
 ```bash
 cd <path-to-data_management-folder>
