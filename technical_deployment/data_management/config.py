@@ -45,28 +45,28 @@ model_version = "20170327"  # format: YYYYMMDD
 #######################################
 
 # reference directory, make sure it exists
-# ref_dir = "C:\\Users\\lixzhan\\Desktop\\testing"
+# ref_dir = "C:/Users/lixzhan/Desktop/testing"
 ref_dir = os.path.dirname(os.path.realpath(sys.argv[0]))
 # folder where historical data are saved, it should have 3 subfolders: 
 #   positive, negative, and testImage; make sure it exists
-image_folder_onprem = ref_dir + "\\onprem"
+image_folder_onprem = ref_dir + "/onprem"
 # folder where DocDB data and Azure Blob images are downloaded into
-dir_download = ref_dir + "\\..\\train_model\\data\\grocery"
+dir_download = ref_dir + "/../train_model/data/grocery"
 # folder for manually annotated images, make sure it exists
-annotated_image_folder = ref_dir + "\\..\\train_model\\data\\grocery\\livestream"
+annotated_image_folder = ref_dir + "/../train_model/data/grocery/livestream"
 # files that have model performance data, make sure they exist
-ap = ref_dir + "\\..\\train_model\\evalResults.tsv"
-precision_recall = ref_dir + "\\..\\train_model\\precisionRecalls.tsv"
+ap = ref_dir + "/../train_model/evalResults.tsv"
+precision_recall = ref_dir + "/../train_model/precisionRecalls.tsv"
 # folder where trained model is saved, make sure it exists
-model_folder_local_a = ref_dir + "\\..\\train_model\\proc\\grocery\\models"
-model_folder_local_b = ref_dir + "\\..\\train_model\\proc\\grocery\\trainedSvm"
+model_folder_local_a = ref_dir + "/../train_model/proc/grocery/models"
+model_folder_local_b = ref_dir + "/../train_model/proc/grocery/trainedSvm"
 # folder for model training, make sure it exists
-train_model_folder = ref_dir + "\\..\\train_model"
+train_model_folder = ref_dir + "/../train_model"
 # folder for web app, make sure it exists
-web_service_folder = ref_dir + "\\..\\web_service\\WebApp"
+web_service_folder = ref_dir + "/../web_service/WebApp"
 
 # folder where Azure Blob saved models are downloaded into
-model_folder_download = ref_dir + "\\modeldownload"
+model_folder_download = ref_dir + "/modeldownload"
 
 # annotation user
 annotated_by_user_history = "power user"

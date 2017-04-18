@@ -31,7 +31,7 @@ collection = next((coll for coll in client.ReadCollections(db['_self'])
 # =============================================================================
 # upload performance to DocDB
 # =============================================================================
-print("Uploading ...")
+print("\nUploading performance data ...\n")
 
 # read AP file
 with open(config.ap) as f:

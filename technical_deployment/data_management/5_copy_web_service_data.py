@@ -38,7 +38,7 @@ curr = config.ref_dir
 dest = config.web_service_folder
 f = "config.py"
 
-print("Copying files for web service ...")
+print("\nCopying files for web service ...\n")
 
 # all files in model training folder
 myfiles = copy_tree(source, dest)
@@ -57,5 +57,5 @@ for f in os.listdir(dest):
 for f in files_all:
     if f not in files_to_keep:
         os.remove(os.path.join(dest, f))    
-    
+assert os.path.isfile(os.path.join(config.web_service_folder +  "/../cntk.zip")), "File cntk.zip does not exist in folder /web_service."  
 print("Done.")

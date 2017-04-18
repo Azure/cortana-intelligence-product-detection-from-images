@@ -247,6 +247,15 @@ After running the above code, you can verify that the data has been uploaded suc
 
 To check the contents in DocumentDB, navigate to the resource group you just created. Then click on the DocumentDB you created (type "NoSQL (DocumentDB) account") and click on "Document Explorer" in the left panel. Then select "image_collection" from the drop-down menu in the right panel and you will see the documents that have been created. Click on any ID to check the contents of that document. In each document the attribute "azureBlobUrl" points to the corresponding image saved on the Blob.
 
+If you run into any issues while writing data to DocumentDB at this step, you can delete the created DocumentDB account and create a new one. To delete an existing DocumentDB account, follow these steps:
+
+1. Go to the [Azure Portal](https://ms.portal.azure.com) and navigate to the resource group you just created.
+2. Click on the DocumentDB account (Type "NoSQL (DocumentDB) account").
+3. In the new panel click on **Overview** and then **Delete Account**.
+4. Confirm the account you want to delete by entering the account name then click **Delete**.
+
+Instructions for creating a new DocumentDB account can be found in section [Create Azure DocumentDB](#docdb).
+
 [Return to Top](#cortana-intelligence-suite-product-detection-from-images-solution)
 
 ## Train a Model on the DSVM

@@ -40,6 +40,11 @@ collection = next((coll for coll in client.ReadCollections(db['_self'])
 # =============================================================================
 # Download images, ROIs, labels, and ETags
 # =============================================================================
+print("\nDownloading data ...\n")
+# file_names = []
+
+num_files = 0 
+
 # four possible values ["testImages", "positive", "negative", "livestream"]
 download_group = ["testImages", "positive", "negative"] 
 
@@ -82,3 +87,8 @@ for _, document in enumerate ((
     local_image = os.path.join(sub_dir, f_image)
     block_blob_service.get_blob_to_path(config.blob_container_image, 
                                         blob_name, local_image)
+    num_files += 1
+    # print(blob_name)
+    
+print("\nData for {} images have been downloaded.".format(num_files))			
+print("Done.") 

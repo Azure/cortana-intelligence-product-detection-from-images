@@ -70,7 +70,10 @@ collection2 = client.CreateCollection(
 # =============================================================================
 # upload historic data
 # =============================================================================
+print("\nUploading data ...\n")
 # file_names = []
+
+num_files = 0 
 
 for dirname, dirnames, filenames in os.walk(config.image_folder_onprem):
     for filename in filenames:
@@ -82,7 +85,7 @@ for dirname, dirnames, filenames in os.walk(config.image_folder_onprem):
             f_t = filename_split[0]
             # file_names.append(f_t)
             
-            sub_folder = dirname.split("\\")[-1]
+            sub_folder = dirname.split("/")[-1]
             
             # upload image to Azure blob
             blob_name = "historic_" + sub_folder + "_" + f_t + ".jpg"
@@ -117,6 +120,8 @@ for dirname, dirnames, filenames in os.walk(config.image_folder_onprem):
             annotated_by_user = None
             annotated_by_model = None
             annotated_date = None
+            
+            num_files += 1
             
             if sub_folder in ["positive", "testImages"]:
                 # merge roi and label
@@ -160,3 +165,6 @@ for dirname, dirnames, filenames in os.walk(config.image_folder_onprem):
             
             # upload the document   
             document = client.CreateDocument(collection['_self'], entry)
+            
+print("\nData for {} 30 images have been uploaded.".format(num_files))			
+print("Done.") 

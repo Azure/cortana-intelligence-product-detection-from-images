@@ -40,6 +40,8 @@ collection = next((coll for coll in client.ReadCollections(db['_self'])
 # =============================================================================
 # Download images, ROIs, labels, and ETags
 # =============================================================================
+print("\nDownloading data ...\n")
+
 # four possible values ["testImages", "positive", "negative", "livestream"]
 download_group = ["livestream"] 
 

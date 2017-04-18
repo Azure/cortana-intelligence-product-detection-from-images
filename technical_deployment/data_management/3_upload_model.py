@@ -23,7 +23,7 @@ block_blob_service = BlockBlobService(account_name=config.storage_account_name,
 # =============================================================================
 # Upload model
 # =============================================================================
-print("Uploading ...")
+print("\nUploading model ...\n")
 
 for dirname, dirnames, filenames in os.walk(config.model_folder_local_a):
     for filename in filenames:
@@ -31,7 +31,7 @@ for dirname, dirnames, filenames in os.walk(config.model_folder_local_a):
         # print(os.path.join(dirname, filename))
          
         local_file = os.path.join(dirname, filename)
-        blob_name = config.model_version + "\\" + filename
+        blob_name = config.model_version + "/" + filename
         block_blob_service.create_blob_from_path(
             config.blob_container_model,
             blob_name,
@@ -45,7 +45,7 @@ for dirname, dirnames, filenames in os.walk(config.model_folder_local_b):
         # print(os.path.join(dirname, filename))
          
         local_file = os.path.join(dirname, filename)
-        blob_name = config.model_version + "\\" + filename
+        blob_name = config.model_version + "/" + filename
         block_blob_service.create_blob_from_path(
             config.blob_container_model,
             blob_name,

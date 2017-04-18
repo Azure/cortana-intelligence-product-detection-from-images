@@ -34,6 +34,8 @@ collection = next((coll for coll in client.ReadCollections(db['_self'])
 # =============================================================================
 # Upload ROIs and labels to DocDB
 # =============================================================================
+print("\nUploading annotations ...\n")
+
 for dirname, dirnames, filenames in os.walk(config.annotated_image_folder):
     for filename in filenames:
         # print path to all filenames.
