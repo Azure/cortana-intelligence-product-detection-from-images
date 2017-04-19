@@ -340,7 +340,7 @@ After you run these commands successfully, the model parameters will be saved in
 
 ## Deploy a Web Service
 
-1. Go to the [CNTK release page](https://github.com/Microsoft/CNTK/releases) and download "[CNTK for Windows v.2.0 Beta 11 CPU only](https://cntk.ai/dlwc-2.0.beta11.0.html)", rename this to "cntk.zip" and put this in the "technical_deployment/web_service" folder.
+1. Go to the [CNTK release page](https://github.com/Microsoft/CNTK/releases) and download "[CNTK for Windows v.2.0 RC 1 CPU only](https://cntk.ai/dlwc-2.0.rc1.html)", rename this to "cntk.zip" and put this in the "technical_deployment/web_service" folder.
 2. If you have not already done so earlier in this tutorial, go to the [Unofficial Windows Binaries for Python Extension Packages site](http://www.lfd.uci.edu/~gohlke/pythonlibs/) to download the following Python wheel:
 ```
 numpy-1.12.1+mkl-cp35-cp35m-win_amd64
