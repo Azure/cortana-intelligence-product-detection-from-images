@@ -47,7 +47,7 @@ myfiles = copy_tree(source, dest)
 copyfile(os.path.join(curr, f), os.path.join(dest, f)) 
 
 # clean up
-files_to_keep = ["cntk_helpers.py", "config.py", "imdb_data.py", "model.py", "PARAMETERS.py", "runserver.py"]
+files_to_keep = ["config.py", "model.py", "runserver.py", "helpers.py", "helpers_cntk.py", "imdb_data.py", "PARAMETERS.py"]
 
 files_all = []
 for f in os.listdir(dest):

@@ -58,9 +58,9 @@ popd
 
 echo "Setting CNTK PATH"
 set CNTK_HOME=%DEPLOYMENT_TARGET%\cntk\cntk
-SET CNTK_WHEEL=cntk-2.0.beta11.0-cp35-cp35m-win_amd64.whl
+SET CNTK_WHEEL=cntk-2.0rc1-cp35-cp35m-win_amd64.whl
 set PATH=%CNTK_HOME%;%PATH%
-pushd "%CNTK_HOME%\Python"
+pushd "%DEPLOYMENT_TARGET%\Wheels"
 
 %PYTHON_EXE% -m pip install %CNTK_WHEEL%
 echo "CNTK Version:"

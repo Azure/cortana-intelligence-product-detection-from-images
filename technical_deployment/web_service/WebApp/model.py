@@ -19,6 +19,7 @@ from azure.storage.blob import ContentSettings
 import datetime
 import config
 import pydocumentdb.document_client as document_client
+from helpers_cntk import *
 
 app = Flask(__name__)
 
@@ -212,7 +213,7 @@ def run_some_deep_learning_cntk(pil_image):
     arguments = {
         model.arguments[0]: [np.ascontiguousarray(np.array(imgPadded, dtype=np.float32).transpose(2, 0, 1))],
     # convert to CNTK's HWC format
-        model.arguments[1]: [np.array(roisCntk)]
+        model.arguments[1]: [np.array(roisCntk, np.float32)]
     }
     dnnOutputs = model.eval(arguments)[0][0]
     dnnOutputs = dnnOutputs[:len(currRois)]  # remove the zero-padded rois
