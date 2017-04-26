@@ -217,7 +217,7 @@ Save your credentials to the memo file.
 | Deployment Username        |[username]
 | Deployment Password     |[password]  |
 | URL                     |[URL]  |
-| Git Clone Url     |[Git clone url]  |
+| Git Clone URL     |[Git clone url]  |
 
 Now that the web app has been prepared, we'll deploy a web service to it after training a model.
 
