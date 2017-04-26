@@ -84,8 +84,8 @@ Please save the information to your memo file in the form of the following table
 
 | **Azure Resource Group** |                     |
 |------------------------|---------------------|
-| resource group name    |[unique]|
-| region              |[region]||
+| Resource Group Name    |[unique]|
+| Region              |[region]||
 
 
 In this tutorial, all resources will be generated in the resource group you just created. You can easily access these resources from the resource group overview page, which can be accessed as follows:
@@ -176,8 +176,8 @@ Save your credentials to the memo file.
 
 | **DSVM** |                     |
 |------------------------|---------------------|
-| DSVM username        |[username]|
-| DSVM password     |[password]  ||
+| DSVM Username        |[username]|
+| DSVM Password     |[password]  ||
 
 Once the VM is created, you can remote desktop into it using the account credentials that you provided. To get the access link, follow these steps:
 
@@ -214,10 +214,10 @@ Save your credentials to the memo file.
 
 | **Azure App Service** |                     |
 |------------------------|---------------------|
-| Deployment username        |[username]
-| Deployment password     |[password]  |
+| Deployment Username        |[username]
+| Deployment Password     |[password]  |
 | URL                     |[URL]  |
-| Git clone url     |[Git clone url]  |
+| Git Clone Url     |[Git clone url]  |
 
 Now that the web app has been prepared, we'll deploy a web service to it after training a model.
 
