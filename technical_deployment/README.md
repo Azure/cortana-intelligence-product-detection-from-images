@@ -58,6 +58,8 @@ This figure describes two workflows - the numbers in orange circles are for the 
 
 In the consumption workflow, the test-website sends images to the web service which identifies products, saves the images and scores, and returns the scored image back to the users. Application Insights will be used to monitor the web service.
 
+All workflows as described in this architecture have been implemented through Python scripts. So you can implement it on your own by either using the provided sample data or by using your own data. It is strongly recommended that you use the provided the data for initial implementation and then modify it using your own data. This'll be helpful for debugging. 
+
 [Return to Top](#cortana-intelligence-suite-product-detection-from-images-solution)
 
 ## Set Up Resources
@@ -309,8 +311,7 @@ Download the file *AlexNet.model* from [here](https://www.cntk.ai/Models/AlexNet
 
 Open a command window and type the following to train the model. It takes about 1 minute to run "4_trainSVM.py" and the other scripts complete within seconds.
 
-You can learn more about the models from the detailed descriptions in the "train_model" folder's README file. Notice however the prerequisites as described there are not relevant here.
-
+You can learn more about the models from the detailed descriptions in the "train_model" folder's README file and from the [Object Detection Using CNTK Tutorial](https://github.com/Azure/ObjectDetectionUsingCntk). Notice however the prerequisites as described there are not relevant here.
 
 ````bash
 cd <path-to-train_model-folder>
@@ -364,7 +365,7 @@ git commit -m "Initialize web service"
 git remote add azure "your Git url"
 git push azure master
 ```
-5. Once the deployment is successful, you can open the web app URL (e.g., `http://**[unique string]**.azurewebsites.net`) that you saved in your memo file. Upload an image for scoring from the "technical_deployment/data_management/score_images" folder. You should get a scored image within a minute.
+5. Once the deployment is successful, you can open the web app URL (e.g., `http://**[unique string]**.azurewebsites.net`) that you saved in your memo file. Upload an image for scoring from the "technical_deployment/data_management/score_images" folder. Since the model has been preloaded, the scoring calculation itself takes about 5 seconds when tested on a local machine. However, due to factors such as transferring data over the web, it takes anywhere from a few seconds to about 20 seconds. If it takes more than 1 minute, however, chances are the web service wasn't set up correctly. In that case, make sure that you followed the instructions correctly.
 
 [Return to Top](#cortana-intelligence-suite-product-detection-from-images-solution)
 
