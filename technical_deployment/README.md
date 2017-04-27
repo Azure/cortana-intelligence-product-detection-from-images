@@ -13,7 +13,7 @@
 - [Manage Historic Data](#manage-historic-data)
 - [Train a Model on the DSVM](#train-a-model-on-the-dsvm)
    - [Configure the DSVM](#configure-the-dsvm)
-   - [Download Data](#download-data)
+   - [Download Training Data](#download-training-data)
    - [Train the Model](#train-the-model)
    - [Save the Model](#save-the-model)
 - [Deploy a Web Service](#deploy-a-web-service)
@@ -57,6 +57,16 @@ The steps described in this guide require the following prerequisites:
 This figure describes two workflows - the numbers in orange circles are for the model training workflow and those in pink are for the consumption workflow. In the model training workflow, the historical data - including both images and annotations - will be loaded from you local computer onto DocumentDB and Azure Storage Blob, with images being stored at Azure Storage Blob and annotation information at DocumentDB. The model training process will be completed on a Data Science Virtual Machine (DSVM) after downloading data from DocumentDB and Azure Storage Blob onto the DSVM. The model will be saved on Azure Storage Blob, and its performance results will be saved on DocumentDB. Then the model can be deployed as a web service. New data can be annotated and used for model retraining.
 
 In the consumption workflow, the test-website sends images to the web service which identifies products, saves the images and scores, and returns the scored image back to the users. Application Insights will be used to monitor the web service.
+
+The usage of different components is as follows:
+- **Data Science Virtual Machine**: download meta data from DocumentDB, download image from Azure Storage Blob, train model, upload model to to Azure Storage Blob, upload model performance data to DocumentDB, and publish a web service. 
+- **DocumentDB**: store meta-data (for each image, this include link to image on Azure Storage Blob, annotated boxes, annotated lables, scores from web service, model version for scoring, and user who annotated an image), store model performance information (average precision, precision, and recall).
+- **Azure Storage Blob**: store images, store model.
+- **PowerBI**: extract information from DocumentDB and generates multiple reports for comparing different model versions: precision vs recall, average precision, and number of items for each objects in selected images.
+- **Azure App Service**: hosts the web service which scores images. 
+- **Application Insights**: monitor the web service hosted on Azure App Service.
+- **Annotation App**: manuall annotates images, creating box coordinates and labels.
+- **Test-Website**: optional, demonstrates how client can access the web service.
 
 All workflows as described in this architecture have been implemented through Python scripts. So you can implement it on your own by either using the provided sample data or by using your own data. It is strongly recommended that you use the provided the data for initial implementation and then modify it using your own data. This'll be helpful for debugging. 
 
@@ -268,10 +278,20 @@ Double-click the ".rdp" file that you downloaded in the "[Provision the Microsof
 
 Open a web browser on the DSVM and open the [GitHub repo](https://github.com/Azure/cortana-intelligence-product-detection-from-images). Download the repository by clicking on the **Clone or download** button of the GitHub repository and then **Download ZIP**. Unzip the downloaded file.
 
-Go to the [Unofficial Windows Binaries for Python Extension Packages site](http://www.lfd.uci.edu/~gohlke/pythonlibs/) to download the following Python wheel and save it in the folder "technical_deployment/train_model/resources/python35_64bit_requirements."
+Go to the [Unofficial Windows Binaries for Python Extension Packages site](http://www.lfd.uci.edu/~gohlke/pythonlibs/) to download the following Python wheel:
+
 ```
 numpy-1.12.1+mkl-cp35-cp35m-win_amd64
 ```
+
+Save 1 copy to each of the following folders:
+
+- "technical_deployment/train_model/resources/python35_64bit_requirements"
+- "technical_deployment/web_service/Wheels"
+
+Download the file *AlexNet.model* from [the CNTK site](https://www.cntk.ai/Models/AlexNet/AlexNet.model) and place it into the following folder: 
+
+- "technical_deployment/train_model/resources/cntk"
 
 Determine the path for the "technical_deployment/train_model/resources/python35_64bit_requirements" folder, then open a command window and type the following:
 
@@ -284,7 +304,7 @@ pip install -r requirements.txt
 
 When run successfully, these commands create a virtual environment and activate it. They also install the packages we will need for the rest of the tutorial.
 
-### Download Data
+### Download Training Data
 
 In this step we'll download the images from Blob and labels from DocumentDB. Just like on the local computer, we open the "config.py" script in "technical_deployment/data_management" folder from a text editor and provide values for the following fields using the informaiton from your memo file:
 
@@ -306,8 +326,6 @@ python 2_download_data_train.py
 You can verify that the data have been downloaded successfully by exploring the folders in "technical_deployment/train_model/data/grocery".
 
 ### Train the Model
-
-Download the file *AlexNet.model* from [here](https://www.cntk.ai/Models/AlexNet/AlexNet.model) and place it into the subfolder *technical_deployment/train_model/resources/cntk*.
 
 Open a command window and type the following to train the model. It takes about 1 minute to run "4_trainSVM.py" and the other scripts complete within seconds.
 
@@ -342,19 +360,13 @@ After you run these commands successfully, the model parameters will be saved in
 ## Deploy a Web Service
 
 1. Go to the [CNTK release page](https://github.com/Microsoft/CNTK/releases) and download "[CNTK for Windows v.2.0 RC 1 CPU only](https://cntk.ai/dlwc-2.0.rc1.html)", rename this to "cntk.zip" and put this in the "technical_deployment/web_service" folder.
-2. If you have not already done so earlier in this tutorial, go to the [Unofficial Windows Binaries for Python Extension Packages site](http://www.lfd.uci.edu/~gohlke/pythonlibs/) to download the following Python wheel:
-```
-numpy-1.12.1+mkl-cp35-cp35m-win_amd64
-```
-Save a copy of the file in the folder "technical_deployment/web_service/Wheels". (You may have already placed a copy of this file in the "technical_deployment/train_model/resources/python35_64bit_requirements" folder.)
-
-3. Open a command window and type the following to copy the trained model and supporting files to the web service folder:
+2. Open a command window and type the following to copy the trained model and supporting files to the web service folder:
 ```bash
 cd <path-to-data_management-folder>
 activate cntk-py35
 python 5_copy_web_service_data.py
 ```
-4. Now go to the folder "technical_deployment/web_service" and deploy the web service by running the following commands. Make sure to replace the following fields with your own values: "your.email@address.com" with your email,"your name" with your name, and "your Git url" with [Git clone url] that you saved in your memo file. Enter your username and password for the Web App when prompted. This process takes about 3 minutes for uploading data and 10 minutes for deploying the web service.
+3. Now go to the folder "technical_deployment/web_service" and deploy the web service by running the following commands. Make sure to replace the following fields with your own values: "your.email@address.com" with your email,"your name" with your name, and "your Git url" with [Git clone url] that you saved in your memo file. Enter your username and password for the Web App when prompted. This process takes about 3 minutes for uploading data and 10 minutes for deploying the web service.
 ```bash
 cd <path-to-web_service-folder>
 git init
@@ -365,7 +377,7 @@ git commit -m "Initialize web service"
 git remote add azure "your Git url"
 git push azure master
 ```
-5. Once the deployment is successful, you can open the web app URL (e.g., `http://**[unique string]**.azurewebsites.net`) that you saved in your memo file. Upload an image for scoring from the "technical_deployment/data_management/score_images" folder. Since the model has been preloaded, the scoring calculation itself takes about 5 seconds when tested on a local machine. However, due to factors such as transferring data over the web, it takes anywhere from a few seconds to about 20 seconds. If it takes more than 1 minute, however, chances are the web service wasn't set up correctly. In that case, make sure that you followed the instructions correctly.
+4. Once the deployment is successful, you can open the web app URL (e.g., `http://**[unique string]**.azurewebsites.net`) that you saved in your memo file. Upload an image for scoring from the "technical_deployment/data_management/score_images" folder. Since the model has been preloaded, the scoring calculation itself takes about 5 seconds when tested on a local machine. However, due to factors such as transferring data over the web, it takes anywhere from a few seconds to about 20 seconds. If it takes more than 1 minute, however, chances are the web service wasn't set up correctly. In that case, make sure that you followed the instructions correctly.
 
 [Return to Top](#cortana-intelligence-suite-product-detection-from-images-solution)
 
@@ -376,7 +388,8 @@ git push azure master
 Power BI is used to monitor model performance and provide intelligence on the units (products) of which the images are taken. The instructions that follow describe how you can use the provided Power BI desktop file (`image-detection-monitoring.pbix`) to visualize your data. You may perform this step either on your local computer or on the DSVM.
 
 1. If you have not already done so, download and install the [Power BI Desktop application](https://powerbi.microsoft.com/en-us/desktop).
-1. Download the Power BI template file `image-detection-monitoring.pbix`, which is available in the  GitHub repository's [power_bi folder](https://github.com/Azure/cortana-intelligence-product-detection-from-images/tree/master/technical_deployment/power_bi), by left-clicking on the file and clicking on "Download" on the page that follows.
+1. If you're using PowerBI from you local computer, download the Power BI template file `image-detection-monitoring.pbix`, which is available in the  GitHub repository's [power_bi folder](https://github.com/Azure/cortana-intelligence-product-detection-from-images/tree/master/technical_deployment/power_bi), by left-clicking on the file and clicking on "Download" on the page that follows.
+1. If you're using PowerBI from the DSVM, you can locate the PowerBI template file `image-detection-monitoring.pbix` from the  "technical_deployment/power_bi" folder.
 1. Double click the downloaded ".pbix" file to open it in Power BI Desktop.
 1. The template file connects to a database used in development. You'll need to change some parameters so that it links to your own database. To do this, follow these steps:
     1. Click on "Edit Queries" as shown in the following figure.
