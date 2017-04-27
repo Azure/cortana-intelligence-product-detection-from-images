@@ -3,7 +3,9 @@
 ## Table of Contents
 - [Introduction](#introduction)
 - [Prerequisites](#prerequisites)
-- [Architecture](#architecture)
+- [Architecture and Overview of Resources](#architecture-and-overview-of-resources)
+   - [Architecture](#architecture)
+   - [Overview of Resources](#overview-of-resources)
 - [Set Up Resources](#set-up-resources)
    - [Create an Azure Resource Group](#arg)
    - [Azure Storage](#storage)
@@ -48,8 +50,9 @@ The steps described in this guide require the following prerequisites:
 
 [Return to Top](#cortana-intelligence-suite-product-detection-from-images-solution)
 
-## Architecture
+## Architecture and Overview of Resources
 
+### Architecture
 [Figure 1][pic1] illustrates the Azure architecture for this solution.
 
 [![Figure 1][pic1]][pic1] Figure 1
@@ -58,17 +61,63 @@ This figure describes two workflows - the numbers in orange circles are for the 
 
 In the consumption workflow, the test-website sends images to the web service which identifies products, saves the images and scores, and returns the scored image back to the users. Application Insights will be used to monitor the web service.
 
-The usage of different components is as follows:
-- **Data Science Virtual Machine**: download meta data from DocumentDB, download image from Azure Storage Blob, train model, upload model to to Azure Storage Blob, upload model performance data to DocumentDB, and publish a web service. 
-- **DocumentDB**: store meta-data (for each image, this include link to image on Azure Storage Blob, annotated boxes, annotated lables, scores from web service, model version for scoring, and user who annotated an image), store model performance information (average precision, precision, and recall).
-- **Azure Storage Blob**: store images, store model.
-- **PowerBI**: extract information from DocumentDB and generates multiple reports for comparing different model versions: precision vs recall, average precision, and number of items for each objects in selected images.
-- **Azure App Service**: hosts the web service which scores images. 
-- **Application Insights**: monitor the web service hosted on Azure App Service.
-- **Annotation App**: manuall annotates images, creating box coordinates and labels.
-- **Test-Website**: optional, demonstrates how client can access the web service.
-
 All workflows as described in this architecture have been implemented through Python scripts. So you can implement it on your own by either using the provided sample data or by using your own data. It is strongly recommended that you use the provided the data for initial implementation and then modify it using your own data. This'll be helpful for debugging. 
+
+### Overview of Resources
+
+This section gives an over of different components used here. 
+
+#### Data Science Virtual Machine
+
+This is the powerhorse of the workflows and most work will be done from here. From the DSVM, you can:
+
+- download meta data from DocumentDB
+- download image from Azure Storage Blob
+- train models
+- upload models to to Azure Storage Blob
+- upload model performance data to DocumentDB, and 
+- publish web services
+
+#### DocumentDB
+
+DocumentDB is used to store meta-data and model performance information. For each image, meta-data includes:
+
+- a link to the image on Azure Storage Blob
+- annotated boxes
+- annotated lables
+- scores from web service
+- model version for scoring model, and 
+- user who annotated an image
+
+Model performance information include average precision, precision, and recall.
+
+#### Azure Storage Blob
+
+Azure Storage Blob is used to store images and models. 
+
+#### PowerBI
+
+You can use PowerBI to extract information from DocumentDB and generates multiple reports for comparing different model versions: 
+
+- precision vs recall
+- average precision, and 
+- number of items for each class in selected images
+
+#### Azure App Service
+
+This is used to host the web service which scores images. 
+
+#### Application Insights
+
+This is used to monitor the web service (e.g. number of users and page views) hosted on Azure App Service.
+
+#### Annotation App
+
+Users can use the annotation app to manuall annotate images, creating box coordinates and labels.
+
+#### Test-Website
+
+This is an optional component, which demonstrates how application clients can access the web service.
 
 [Return to Top](#cortana-intelligence-suite-product-detection-from-images-solution)
 
