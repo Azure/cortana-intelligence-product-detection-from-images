@@ -376,9 +376,21 @@ You can verify that the data have been downloaded successfully by exploring the 
 
 ### Train the Model
 
-Open a command window and type the following to train the model. It takes about 1 minute to run "4_trainSVM.py" and the other scripts complete within seconds.
+R-CNNs for Object Detection were first presented in 2014 by [Ross Girshick et al.](http://arxiv.org/abs/1311.2524), and shown to outperform previous state-of-the-art approaches on one of the major object recognition challenges in the field: [Pascal VOC](http://host.robots.ox.ac.uk/pascal/VOC/). Since then, two follow-up papers were published which contain significant speed improvements: [Fast R-CNN](https://arxiv.org/pdf/1504.08083v2.pdf) and [Faster R-CNN](https://arxiv.org/abs/1506.01497).
 
-You can learn more about the models from the detailed descriptions in the "train_model" folder's README file and from the [Object Detection Using CNTK Tutorial](https://github.com/Azure/ObjectDetectionUsingCntk). Notice however the prerequisites as described there are not relevant here.
+The basic idea of R-CNN is to take a deep Neural Network which was originally trained for image classification using millions of annotated images and modify it for the purpose of object detection. The basic idea from the first R-CNN paper is illustrated in the Figure below (taken from the paper): (1) Given an input image, (2) in a first step, a large number region proposals are generated. (3) These region proposals, or Regions-of-Interests (ROIs), are then each independently sent through the network which outputs a vector of e.g. 4096 floating point values for each ROI. Finally, (4) a classifier is learned which takes the 4096 float ROI representation as input and outputs a label and confidence to each ROI.  
+<p align="center">
+<img src="https://cloud.githubusercontent.com/assets/9322661/25529223/32563124-2bef-11e7-8e4f-acb0ea9101bd.jpg" alt="alt text" width="600" align="center"/>
+</p>
+
+While this approach works well in terms of accuracy, it is very costly to compute since the Neural Network has to be evaluated for each ROI. Fast R-CNN addresses this drawback by only evaluating most of the network (to be specific: the convolution layers) a single time per image. According to the authors, this leads to a 213 times speed-up during testing and a 9x speed-up during training without loss of accuracy.
+
+The original Caffe implementation used in the R-CNN papers can be found at github:
+[RCNN](https://github.com/rbgirshick/rcnn), [Fast R-CNN](https://github.com/rbgirshick/fast-rcnn), and [Faster R-CNN](https://github.com/rbgirshick/py-faster-rcnn). This section uses some of the code from these repositories, notably (but not exclusively) for svm training and model evaluation.
+
+You can learn more about the scripts and models from the "train_model" folder's README file and from the [Object Detection Using CNTK Tutorial](https://github.com/Azure/ObjectDetectionUsingCntk). Notice however the prerequisites as described there are not relevant here.
+
+In this section the Fast R-CNN model will be used. Open a command window and type the following to train the model. It takes about 1 minute to run "4_trainSVM.py" and the other scripts complete within seconds.
 
 ````bash
 cd <path-to-train_model-folder>
