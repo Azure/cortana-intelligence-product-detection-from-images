@@ -80,7 +80,7 @@ This is the powerhorse of the workflows and most work will be done from here. Fr
 
 #### DocumentDB
 
-DocumentDB is used to store meta-data and model performance information. For each image, meta-data includes:
+DocumentDB is used to store meta-data and model performance information. For each image the meta-data include, among others:
 
 - a link to the image on Azure Storage Blob
 - annotated boxes
@@ -284,11 +284,14 @@ Now that the web app has been prepared, we'll deploy a web service to it after t
 
 ## Manage Historic Data
 
-As described in the architecture, we assume that there are some data on your local machine and we need to transfer those images onto DocumentDB and Azure Storage Blob. The demo data are saved in this repository's `technical_deployment/data_management` subfolder. To download the content of this folder, you can use either of these two approaches:
+As described in the architecture, we assume that there are some data on your local machine and we need to transfer those images onto DocumentDB and Azure Storage Blob. The instructions in this section describes how you can do this from your local machine. 
+
+These steps, however, can also be done from the DSVM. If you want to use the DSVM, follow the instructions in the [Configure the DSVM](#configure-the-dsvm) section, then return to this section and follow the instructions here.
+
+The demo data are saved in this repository's `technical_deployment/data_management` subfolder. To download the content of this folder, you can use either of the following two approaches. This is not necessary if you're doing this on the DSVM and have completed the steps in the section [Configure the DSVM](#configure-the-dsvm).
 
 - Download the entire repository by clicking on the **Clone or download** button of the GitHub repository and then **Download ZIP**. this approach downloads the entire repository and takes longer. Unzip the downloaded file.
 - Open the [DownGit](https://minhaskamal.github.io/DownGit/#/home) site and enter `https://github.com/Azure/cortana-intelligence-product-detection-from-images/tree/master/technical_deployment/data_management`, then click on **Download** to download the folder. This approach only downloads the data we need and is faster. Unzip the downloaded file.
-
 
 Open the "technical_deployment/data_management/config.py" file from a text editor and provide values for the following fields using the information from your memo file, leaving the other fields as-is:
 
@@ -297,13 +300,14 @@ Open the "technical_deployment/data_management/config.py" file from a text edito
 - `documentdb_uri` (replace "lzimage3" with your **unique string**)
 - `documentdb_key`
 
-If you already have Python installed, you can keep using your version. Otherwise, download Python 3.5.3 from [Python Software Foundation](https://www.python.org/downloads/) and install it. Then go to the command window and type the following:
+If you already have Python installed (which is the case for DSVM), you can keep using your version. Otherwise, download Python 3.5.3 from [Python Software Foundation](https://www.python.org/downloads/) and install it. Then go to the command window and type the following:
 
 ````bash
 cd <path-to-data_management-folder>
 pip install -r requirements.txt
 python 1_upload_historical_data.py
 ````
+
 After running the above code, you can verify that the data has been uploaded successfully. To check the contents in Azure Storage Blob, go to the [Azure Portal](https://ms.portal.azure.com) and navigate to the resource group you just created. Then click on the Azure Storage Blob you created (type "Storage account") and click on "Blobs" in the **Overview** panel. Two containers have been created: *images* and *models*. Click on *images* to view the images that have been uploaded.
 
 To check the contents in DocumentDB, navigate to the resource group you just created. Then click on the DocumentDB you created (type "NoSQL (DocumentDB) account") and click on "Document Explorer" in the left panel. Then select "image_collection" from the drop-down menu in the right panel and you will see the documents that have been created. Click on any ID to check the contents of that document. In each document the attribute "azureBlobUrl" points to the corresponding image saved on the Blob.
@@ -352,6 +356,10 @@ pip install -r requirements.txt
 ````
 
 When run successfully, these commands create a virtual environment and activate it. They also install the packages we will need for the rest of the tutorial.
+
+The tasks that are described here using DSVM can also be completed using your local Windows machine. However, there are several advantages in using the DSVM. One example is that you can use the already-installed tools like Python, Git, and PowerBI, without having to do that by yourself. Another example is that you can take advantage of GPUs that are available with the [Deep Learning toolkit for Data Science VM](https://azuremarketplace.microsoft.com/en-us/marketplace/apps/microsoft-ads.dsvm-deep-learning?tab=Overview). While the instructions here are for DSVM without GPUs, the steps are similar if you're using the Deep learning toolkit for Data Science VM. We will add details about how to use the DSVM with GPU in future.
+
+Return to [Manage Historic Data](#manage-historic-data) if you're using DSVM for managing historic data to follow the rest of the instruction in that section. Otherwise, continue to the next section.
 
 ### Download Training Data
 
@@ -438,7 +446,7 @@ git commit -m "Initialize web service"
 git remote add azure "your Git url"
 git push azure master
 ```
-4. Once the deployment is successful, you can open the web app URL (e.g., `http://**[unique string]**.azurewebsites.net`) that you saved in your memo file. Upload an image for scoring from the "technical_deployment/data_management/score_images" folder. Since the model has been preloaded, the scoring calculation itself takes about 5 seconds when tested on a local machine. However, due to factors such as transferring data over the web, it takes anywhere from a few seconds to about 20 seconds. If it takes more than 1 minute, however, chances are the web service wasn't set up correctly. In that case, make sure that you followed the instructions correctly.
+4. Once the deployment is successful, you can open the web app URL (e.g., `http://**[unique string]**.azurewebsites.net`) that you saved in your memo file. Upload an image for scoring from the "technical_deployment/data_management/score_images" folder. Since the model has been preloaded, the scoring calculation itself takes about 5 seconds when tested on a local machine. However, due to factors such as transferring data over the web, it takes anywhere from a few seconds to about 20 seconds. If it takes more than 1 minute, however, chances are the web service wasn't set up correctly. In that case, make sure that you followed the instructions correctly. 
 
 [Return to Top](#cortana-intelligence-suite-product-detection-from-images-solution)
 
@@ -512,9 +520,21 @@ Now we can publish the report into Power BI online to easily share with others:
 
 ## Retrain Models
 
-At this point, you have a working solution that can used to scores images and monitor model performance. As you gather more data, model performance can be improved by retraining the model using the new data. To do that we will follow these steps:
+At this point, you have a working solution that can be used to scores images and monitor model performance. As you gather more data, model performance can be improved by retraining the model using the new data. 
+
+```diff
++ Caution! 
++ Using scored images for retraining should be done with care. 
++ If the scores images have the wrong boxes and/or labels,
++ using them for retraining will lead to deterioration in model performance. 
++ So the scored images should be validated and annotated manually if 
++ necessary before they are used for model retraining.
+```
+
+To use the new images for retraining, we will follow these steps:
 
 - Download the images from DocumentDB and Blob to the DSVM. You can use a specific new image or a group of them. In this demo, we'll be downloading all images that have been processed by the web service.
+- Inspect the model-scored images
 - Add manual annotations
 - Save the manual annotations
 - Retrain the model using historical data and the newly-annotated images
@@ -528,7 +548,7 @@ activate cntk-py35
 python 6_annotation_download_data.py
 ````
 
-Open the folder "technical_deployment/train_model/data/grocery/livestream" to make sure that the images have been downloaded successfully. If you want to view a scored image, you can modify the "visualize_local.py" script under the "technical_deployment\train_model" folder so that the variable "file_name" indicates the image you want to view. Then run the following commands:
+Open the folder "technical_deployment/train_model/data/grocery/livestream" to make sure that the images have been downloaded successfully. To view a scored image, you can modify the "visualize_local.py" script under the "technical_deployment\train_model" folder so that the variable "file_name" indicates the image you want to view. Then run the following commands:
 
 ````bash
 cd <path-to-train_model-folder>
