@@ -286,11 +286,11 @@ Now that the web app has been prepared, we'll deploy a web service to it after t
 
 As described in the architecture, we assume that there are some data on your local machine and we need to transfer those images onto DocumentDB and Azure Storage Blob. The instructions in this section describes how you can do this from your local machine. 
 
-These steps, however, can also be done from the DSVM. If you want to use the DSVM, follow the instructions in the [Configure the DSVM](#configure-the-dsvm) section, then return to this section and follow the instructions here.
+Since the image data used in this Guide are available in the GitHub repo, these steps can also be done from the DSVM. This way you don't have to install any software on your local machine. If you want to use the DSVM in this demo, follow the instructions in the [Configure the DSVM](#configure-the-dsvm) section, then return to this section and follow the instructions here. In practice, however, your own data will be on you local machines and it is recommended that you follow the instructions in this section to upload your local data to DocumentDB and Azure Storage Blob. 
 
-The demo data are saved in this repository's `technical_deployment/data_management` subfolder. To download the content of this folder, you can use either of the following two approaches. This is not necessary if you're doing this on the DSVM and have completed the steps in the section [Configure the DSVM](#configure-the-dsvm).
+The demo data are saved in this repository's `technical_deployment/data_management` subfolder. To download the content of this folder, you can use either of the following two approaches. This download step is not necessary if you're doing this on the DSVM and have completed the steps in the section [Configure the DSVM](#configure-the-dsvm).
 
-- Download the entire repository by clicking on the **Clone or download** button of the GitHub repository and then **Download ZIP**. this approach downloads the entire repository and takes longer. Unzip the downloaded file.
+- Download the entire repository by clicking on the **Clone or download** button of the GitHub repository and then **Download ZIP**. this approach downloads the entire repository and takes longer. Unzip the downloaded file. Or
 - Open the [DownGit](https://minhaskamal.github.io/DownGit/#/home) site and enter `https://github.com/Azure/cortana-intelligence-product-detection-from-images/tree/master/technical_deployment/data_management`, then click on **Download** to download the folder. This approach only downloads the data we need and is faster. Unzip the downloaded file.
 
 Open the "technical_deployment/data_management/config.py" file from a text editor and provide values for the following fields using the information from your memo file, leaving the other fields as-is:
