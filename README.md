@@ -7,7 +7,12 @@ The objective of this Guide is to demonstrate data pipelines for retailers to de
 ## Solution Demo
 
 The snapshot below shows the products detected from an image using the web service you'll be able to deploy at the end of the Guide.
-![Insights](https://cloud.githubusercontent.com/assets/9322661/25716462/1c50db4e-30cd-11e7-89e1-208dad46b4c6.PNG)
+![demo](https://cloud.githubusercontent.com/assets/9322661/25716462/1c50db4e-30cd-11e7-89e1-208dad46b4c6.PNG)
+
+## Solution Dashboard
+
+The snapshot below shows an example PowerBI dashboard that gives insights into the performance of the model. You can use this to easily compare performance of different models. 
+![dashboard](https://cloud.githubusercontent.com/assets/9322661/25718066/bb6bc626-30d2-11e7-96f6-76a44030941e.PNG)
 
 ## Solution Architecture
 
