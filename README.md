@@ -12,7 +12,7 @@ The snapshot below shows the products detected from an image using the web servi
 ## Solution Dashboard
 
 The snapshot below shows an example PowerBI dashboard that gives insights into the performance of the model. You can use this to easily compare performance of different models. 
-![dashboard](https://cloud.githubusercontent.com/assets/9322661/25718066/bb6bc626-30d2-11e7-96f6-76a44030941e.PNG)
+![dashboard](https://cloud.githubusercontent.com/assets/9322661/25718651/d99fdb12-30d4-11e7-9b71-ab83b4adfc36.PNG)
 
 ## Solution Architecture
 
