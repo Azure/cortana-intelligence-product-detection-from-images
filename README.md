@@ -5,8 +5,8 @@ In today’s highly competitive and connected environment, retail stores are inc
 The objective of this Guide is to demonstrate data pipelines for retailers to detect products from images.  This tutorial shows how to set up the prediction service as well as retrain models using newly available data.
 
 ## Solution Demo
+The snapshot below shows the products detected from an image using the [demo website](http://demoimage.azurewebsites.net/). You'll be able to deploy the same website using your own Azure subscription by the end of the Guide.
 
-The snapshot below shows the products detected from an image using the web service you'll be able to deploy at the end of the Guide.
 ![demo](https://cloud.githubusercontent.com/assets/9322661/25716462/1c50db4e-30cd-11e7-89e1-208dad46b4c6.PNG)
 
 ## Solution Dashboard
