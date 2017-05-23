@@ -190,20 +190,21 @@ Click on "Refresh" from the resource group's **Overview** pane so that the new r
 ### Create Azure DocumentDB
 
 1. Go to the [Azure Portal](https://ms.portal.azure.com) and navigate to the resource group you just created.
-2. In ***Overview*** panel, click **+Add** to add a new resource. Enter **documentdb** and hit the "Enter" key to search.
-3. Click on **NoSQL (DocumentDB)** offered by Microsoft (in the "Storage" category).
+2. In ***Overview*** panel, click **+Add** to add a new resource. Enter **Cosmos DB** and hit the "Enter" key to search.
+3. Click on **Azure Cosmos DB** offered by Microsoft (in the "Storage" category).
 4. Click **Create** at the bottom of the description panel.
 5. Enter your **unique string** for "ID."
-6. Make sure **DocumentDB** is selected for "NoSQL API."
+6. Select **SQL (DocumentDB)** from the drop-down list for **API**.
 7. Make sure the selected resource group is the one you just created. DocumentDB may not be available for some regions (e.g. "East US") and you can used the system-assigned region if this is the case.
-8. Leaving the default values for all other fields, click the **Create** button at the bottom.
+8. Keeping the default values for all other fields, click the **Create** button at the bottom.
 9. Go back to your resource group overview and wait until DocumentDB is deployed as reported in the Notifications area.
 
 Get the primary key for the DocumentDB account, which will be used in the Python scripts to upload and download data, by following these steps:
 
-1. Click the created DocumentDB. In the new panel, click on **keys**.
-1. Ensure that the "Read-write keys" tab is selected.
-1. In the new panel, click the "Click to copy" icon next to `URI` and paste the value into your memo. Repeat the same process for `PRIMARY KEY.`
+1. Click the created Azure Cosmos DB account. In the new panel, click on **keys**.
+1. Click the "Read-write keys" tab.
+1. Click the "Click to copy" icon for `URI` and paste the value into your memo.
+2. Click the "Click to copy" icon for `PRIMARY KEY` and paste the value into your memo.
 
 | **DocumentDB Account** |                     |
 |------------------------|---------------------|
