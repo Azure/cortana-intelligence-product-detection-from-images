@@ -449,6 +449,18 @@ git push azure master
 ```
 4. Once the deployment is successful, you can open the web app URL (e.g., `http://**[unique string]**.azurewebsites.net`) that you saved in your memo file. Upload an image for scoring from the "technical_deployment/data_management/score_images" folder. Since the model has been preloaded, the scoring calculation itself takes about 5 seconds when tested on a local machine. However, due to factors such as transferring data over the web, it takes anywhere from a few seconds to about 20 seconds. If it takes more than 1 minute, however, chances are the web service wasn't set up correctly. In that case, make sure that you followed the instructions correctly. 
 
+The Web service may be scaled **up** to support higher throughput per resource, or scaled **out** to spread throughput across multiple resources. If you find it necessary to scale up or out, you can do that from the Azure Portal. To scale up, follow these steps.
+
+1. Click the created App Service from within [Azure Portal](https://ms.portal.azure.com).
+2. In the newly opened panel, click on **Scale up (App Service plan)**.
+3. A panel named "Choose your pricing tier" shows up, you can select the pricing tier that fits your needs.
+
+To scale out, follow the following steps.
+
+1. Click the created App Service from within [Azure Portal](https://ms.portal.azure.com).
+2. In the newly opened panel, click on **Scale out(App Service plan)**.
+3. From the newly opened panel you can customize how to scale out the web service.
+
 [Return to Top](#cortana-intelligence-suite-product-detection-from-images-solution)
 
 ## Monitor Model Performance

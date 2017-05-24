@@ -11,8 +11,11 @@ The snapshot below shows the products detected from an image using the [demo web
 
 ## Solution Dashboard
 
-The snapshot below shows an example PowerBI dashboard that gives insights into the performance of the model. You can use this to easily compare performance of different models. 
+The snapshot below shows an example PowerBI dashboard showing the performance of the model. It compares precision vs recall for different threshold levels. The performance is near perfect for the sample data, as indicated by the fact that the area under the curve is close to 1. Actual performance for you own data will differ. The provided dashboard template supports comparing model performance for multiple models.  
 ![dashboard](https://cloud.githubusercontent.com/assets/9322661/25718651/d99fdb12-30d4-11e7-9b71-ab83b4adfc36.PNG)
+
+Below is another dashboard snapshot that shows average precision by class. Users can select the classes that are important and this helps focus on select classes as  the number of classes increases. Performance for multiple models can be compared as well.
+![dashboard2](https://cloud.githubusercontent.com/assets/9322661/25718065/bb6a6dd0-30d2-11e7-8cc3-30bc9d5e74ef.PNG)
 
 ## Solution Architecture
 
