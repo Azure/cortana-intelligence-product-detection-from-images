@@ -26,6 +26,7 @@
 # import packages
 # =============================================================================
 import os 
+import re
 import pytz
 import datetime
 from azure.storage.blob import BlockBlobService
@@ -85,7 +86,7 @@ for dirname, dirnames, filenames in os.walk(config.image_folder_onprem):
             f_t = filename_split[0]
             # file_names.append(f_t)
             
-            sub_folder = dirname.split("/")[-1]
+            sub_folder = re.split(r"[/\\]+", dirname)[-1]
             
             # upload image to Azure blob
             blob_name = "historic_" + sub_folder + "_" + f_t + ".jpg"
@@ -166,5 +167,5 @@ for dirname, dirnames, filenames in os.walk(config.image_folder_onprem):
             # upload the document   
             document = client.CreateDocument(collection['_self'], entry)
             
-print("\nData for {} 30 images have been uploaded.".format(num_files))			
+print("\nData for {} out of 30 images have been uploaded.".format(num_files))			
 print("Done.") 

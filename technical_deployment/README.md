@@ -347,6 +347,10 @@ Download the file *AlexNet.model* from [the CNTK site](https://www.cntk.ai/Model
 
 - "technical_deployment/train_model/resources/cntk"
 
+Go to the [CNTK release page](https://github.com/Microsoft/CNTK/releases) and download "[CNTK for Windows v.2.0 RC 1 CPU only](https://cntk.ai/dlwc-2.0.rc1.html)", rename this to "cntk.zip" and put this in the following folder:
+
+- "technical_deployment/web_service"
+
 Determine the path for the "technical_deployment/train_model/resources/python35_64bit_requirements" folder, then open a command window and type the following:
 
 ````bash
@@ -429,14 +433,13 @@ After you run these commands successfully, the model parameters will be saved in
 
 ## Deploy a Web Service
 
-1. Go to the [CNTK release page](https://github.com/Microsoft/CNTK/releases) and download "[CNTK for Windows v.2.0 RC 1 CPU only](https://cntk.ai/dlwc-2.0.rc1.html)", rename this to "cntk.zip" and put this in the "technical_deployment/web_service" folder.
-2. Open a command window and type the following to copy the trained model and supporting files to the web service folder:
+1. Open a command window and type the following to copy the trained model and supporting files to the web service folder:
 ```bash
 cd <path-to-data_management-folder>
 activate cntk-py35
 python 5_copy_web_service_data.py
 ```
-3. Now go to the folder "technical_deployment/web_service" and deploy the web service by running the following commands. Make sure to replace the following fields with your own values: "your.email@address.com" with your email,"your name" with your name, and "your Git url" with [Git clone url] that you saved in your memo file. Enter your username and password for the Web App when prompted. This process takes about 3 minutes for uploading data and 10 minutes for deploying the web service.
+2. Now go to the folder "technical_deployment/web_service" and deploy the web service by running the following commands. Make sure to replace the following fields with your own values: "your.email@address.com" with your email,"your name" with your name, and "your Git url" with [Git clone url] that you saved in your memo file. Enter your username and password for the Web App when prompted. This process takes about 3 minutes for uploading data and 10 minutes for deploying the web service.
 ```bash
 cd <path-to-web_service-folder>
 git init
@@ -447,7 +450,7 @@ git commit -m "Initialize web service"
 git remote add azure "your Git url"
 git push azure master
 ```
-4. Once the deployment is successful, you can open the web app URL (e.g., `http://**[unique string]**.azurewebsites.net`) that you saved in your memo file. Upload an image for scoring from the "technical_deployment/data_management/score_images" folder. Since the model has been preloaded, the scoring calculation itself takes about 5 seconds when tested on a local machine. However, due to factors such as transferring data over the web, it takes anywhere from a few seconds to about 20 seconds. If it takes more than 1 minute, however, chances are the web service wasn't set up correctly. In that case, make sure that you followed the instructions correctly. 
+3. Once the deployment is successful, you can open the web app URL (e.g., `http://**[unique string]**.azurewebsites.net`) that you saved in your memo file. Upload an image for scoring from the "technical_deployment/data_management/score_images" folder. Since the model has been preloaded, the scoring calculation itself takes about 5 seconds when tested on a local machine. However, due to factors such as transferring data over the web, it takes anywhere from a few seconds to about 20 seconds. If it takes more than 1 minute, however, chances are the web service wasn't set up correctly. In that case, make sure that you followed the instructions correctly. 
 
 The Web service may be scaled **up** to support higher throughput per resource, or scaled **out** to spread throughput across multiple resources. If you find it necessary to scale up or out, you can do that from the Azure Portal. To scale up, follow these steps.
 
