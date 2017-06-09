@@ -1,4 +1,4 @@
-# Product Detection from Images - A Cortana Intelligence Solution How-to Guide
+ # Product Detection from Images - A Cortana Intelligence Solution How-to Guide
 
 In today’s highly competitive and connected environment, retail stores are increasingly finding it imperative to make use of artificial intelligence in their daily operations. Image detection - a technique which can locate and classify objects in images - is a technique that has the potential to bring huge rewards for such stores. For example, retailers can use this technique to determine which product a customer has picked up from the shelf. This information in turn helps stores manage product inventory.
 
@@ -29,11 +29,9 @@ The end-to-end solution is implemented in the cloud, using Microsoft Azure. The 
 
 This solution package contains materials to help both technical and business audiences understand our Product Detection from Images Solution built on the [Cortana Intelligence Suite](https://www.microsoft.com/en-us/server-cloud/cortana-intelligence-suite/Overview.aspx).
 
-## Business Audiences
+## Business Audiences (Coming Soon)
 
-In this repository you will find a folder labeled [*solution_overview_for_business_audiences*](https://github.com/Azure/cortana-intelligence-product-detection-from-images/tree/master/solution_overview_for_business_audiences) which contains a presentation covering this solution and benefits of using the Cortana Intelligence Suite.
-
-For more information on how to tailor Cortana Intelligence to your needs [connect with one of our partners](http://aka.ms/CISFindPartner).
+For information on how to tailor Cortana Intelligence to your needs [connect with one of our partners](http://aka.ms/CISFindPartner).
 
 ## Technical Audiences
 
