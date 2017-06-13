@@ -78,6 +78,9 @@ def load():
     
 @app.route("/uploader", methods=['POST'])
 def upload_file():
+    target = os.path.join(APP_ROOT, 'images/')
+    image_names = os.listdir(target)
+    
     file = request.files['file']
 
     # save to blob
