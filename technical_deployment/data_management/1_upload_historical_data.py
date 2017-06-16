@@ -44,29 +44,66 @@ block_blob_service = BlockBlobService(account_name=config.storage_account_name,
 
 
 # Create a container for saving images
-block_blob_service.create_container(config.blob_container_image)
+if block_blob_service.create_container(config.blob_container_image): 
+    print("Container for images was created successfully.")
+else:
+    print("Container for images exists already.")
 
 # Create a container for saving models
-block_blob_service.create_container(config.blob_container_model)
+if block_blob_service.create_container(config.blob_container_model):
+    print("Container for models was created successfully.")
+else:
+    print("Container for models exists already.")
+
 
 # Establish a link to DocDB
 client = document_client.DocumentClient(config.documentdb_uri, 
                                         {'masterKey': config.documentdb_key})
 
-# Create DocumentDB database
-db = client.CreateDatabase({ 'id': config.documentdb_database })
 
-# Create collection for saving image meta-data
-collection = client.CreateCollection(
-    db['_self'],
-    {'id': config.documentdb_collectoion_image }
-)
+# check existing databases                                        
+# databases = list(client.ReadDatabases())
 
-# Create collection for saving model performance
-collection2 = client.CreateCollection(
-    db['_self'],
-    { 'id': config.documentdb_collectoion_performance }
-)
+# check if database exists 
+databases = list(client.QueryDatabases({
+    "query": "SELECT * FROM r WHERE r.id=@id",
+    "parameters": [
+        { "name":"@id", "value": config.documentdb_database }
+    ]
+}))
+
+if len(databases) == 0:
+    # Create DocumentDB database
+    db = client.CreateDatabase({ 'id': config.documentdb_database })
+else:
+    db = next((data for data in client.ReadDatabases()
+               if data['id'] == config.documentdb_database))
+    print("DocumentDB database exists already.")
+                
+# check existing collections
+collections = [collection['id'] for collection in  list(client.ReadCollections(db['_self']))]    
+
+if config.documentdb_collectoion_image not in collections:
+    # Create collection for saving image meta-data
+    collection = client.CreateCollection(
+        db['_self'],
+        {'id': config.documentdb_collectoion_image }
+    )
+else:
+    collection = next((coll for coll in client.ReadCollections(db['_self'])
+                       if coll['id'] == config.documentdb_collectoion_image))
+    print("The colleciton for images exists already.")
+    
+if config.documentdb_collectoion_performance not in collections:                       
+    # Create collection for saving model performance
+    collection2 = client.CreateCollection(
+        db['_self'],
+        { 'id': config.documentdb_collectoion_performance }
+    )
+else:
+    collection2 = next((coll for coll in client.ReadCollections(db['_self'])
+                       if coll['id'] == config.documentdb_collectoion_performance))
+    print("The colleciton for model performance exists already.")
 
 # =============================================================================
 # upload historic data
