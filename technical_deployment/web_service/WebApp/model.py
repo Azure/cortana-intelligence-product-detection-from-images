@@ -78,9 +78,9 @@ def load():
 
 @app.route("/updatemodel/<modelversion>", methods=['GET'])
 def update_model_version(modelversion):
-    target = os.path.join(APP_ROOT, 'images/')
     container = config.blob_container_model
     generator = block_blob_service.list_blobs(container)
+    update_status = "The specified model version " + modelversion + " does not exist."
     for blob in generator:
         blob_name_split = blob.name.split("/")
         # print(blob.name)
@@ -92,11 +92,10 @@ def update_model_version(modelversion):
             elif blob_name_split[1] == "config.py": 
                 block_blob_service.get_blob_to_path(container, blob.name, os.path.join(APP_ROOT, blob_name_split[1])) 
             print(blob.name)
-            update_status = "Model updated successfully"
-        else: 
-            update_status = "The specified model version " + modelversion + " does not exist"
+            update_status = "Model updated successfully using version " + modelversion + "."
     
-    return render_template('updatemodel.html', updateStatus = update_status) 
+    return render_template('updatemodel.html', updateStatus = update_status)     
+    
     
 @app.route("/uploader", methods=['POST'])
 def upload_file():
