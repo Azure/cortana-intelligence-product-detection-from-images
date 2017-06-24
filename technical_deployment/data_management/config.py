@@ -60,6 +60,9 @@ precision_recall = ref_dir + "/../train_model/precisionRecalls.tsv"
 # folder where trained model is saved, make sure it exists
 model_folder_local_a = ref_dir + "/../train_model/proc/grocery/models"
 model_folder_local_b = ref_dir + "/../train_model/proc/grocery/trainedSvm"
+# folder where trained model is saved for web service
+web_service_a = "proc/grocery/models/"
+web_service_b = "proc/grocery/trainedSvm/"
 # folder for model training, make sure it exists
 train_model_folder = ref_dir + "/../train_model"
 # folder for web app, make sure it exists

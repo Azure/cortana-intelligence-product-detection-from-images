@@ -75,6 +75,28 @@ def load():
     image_names = os.listdir(target)
     return render_template('index.html', image_names=image_names)
 
+
+@app.route("/updatemodel/<modelversion>", methods=['GET'])
+def update_model_version(modelversion):
+    target = os.path.join(APP_ROOT, 'images/')
+    container = config.blob_container_model
+    generator = block_blob_service.list_blobs(container)
+    for blob in generator:
+        blob_name_split = blob.name.split("/")
+        # print(blob.name)
+        if blob_name_split[0] == modelversion:
+            if blob_name_split[1] not in ["frcn_svm.model", "config.py"]:
+                block_blob_service.get_blob_to_path(container, blob.name, os.path.join(APP_ROOT, config.web_service_b, blob_name_split[1]))
+            elif blob_name_split[1] == "frcn_svm.model":
+                block_blob_service.get_blob_to_path(container, blob.name, os.path.join(APP_ROOT, config.web_service_a, blob_name_split[1])) 
+            elif blob_name_split[1] == "config.py": 
+                block_blob_service.get_blob_to_path(container, blob.name, os.path.join(APP_ROOT, blob_name_split[1])) 
+            print(blob.name)
+            update_status = "Model updated successfully"
+        else: 
+            update_status = "The specified model version " + modelversion + " does not exist"
+    
+    return render_template('updatemodel.html', updateStatus = update_status) 
     
 @app.route("/uploader", methods=['POST'])
 def upload_file():
