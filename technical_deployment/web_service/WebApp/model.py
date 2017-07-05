@@ -253,6 +253,8 @@ def upload_docdb(appliance_id, blob_url, modified_date,
 
     
 def run_some_deep_learning_cntk(pil_image):
+    random.seed(35)
+    
     # Load image
     open_cv_image = np.array(pil_image)
     imgOrig = open_cv_image[:, :, ::-1].copy()  # Convert RGB to BGR
@@ -316,6 +318,8 @@ def run_some_deep_learning_cntk(pil_image):
 
 
 def run_some_deep_learning_cntk_local(imgPath):
+    random.seed(35)
+    
     # Load image
     # open_cv_image = np.array(pil_image)
     # imgOrig = open_cv_image[:, :, ::-1].copy()  # Convert RGB to BGR
