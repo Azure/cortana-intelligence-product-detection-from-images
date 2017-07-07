@@ -1,0 +1,424 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "adminUsername": {
+            "type": "string",
+            "metadata": {
+                "description": "Username for the Data Science Virtual Machine"
+            }
+        },
+        "adminPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "Password for the Data Science Virtual Machine"
+            }
+        },
+        "vmName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name for the Data Science Virtual Machine"
+            }
+        },
+        "vmSize": { 
+            "type": "string",
+            "metadata": {
+                "description": "Size for the Data Science Virtual Machine"
+            },
+            "defaultValue": "Standard_D1_v2",
+            "allowedValues": [
+                "Standard_D1_v2",
+                "Standard_D2_v2",
+                "Standard_D3_v2",
+                "Standard_D4_v2",
+                "Standard_D5_v2",
+                "Standard_D11_v2",
+                "Standard_D12_v2",
+                "Standard_D13_v2",
+                "Standard_D14_v2",
+                "Standard_G1",
+                "Standard_G2",
+                "Standard_G3",
+                "Standard_G4",
+                "Standard_G5",
+                "Standard_GS1",
+                "Standard_GS2",
+                "Standard_GS3",
+                "Standard_GS4",
+                "Standard_GS5",
+                "Standard_A3",
+                "Standard_A4",
+                "Standard_A5",
+                "Standard_A6",
+                "Standard_A7"
+            ]
+        }    
+    },
+    "variables": {
+        "storage-version": "2017-06-01",
+        "serverfarms-version": "2016-09-01",
+        "sites-version": "2016-08-01",
+        "documentdb-version": "2016-03-31",
+        "web-farm-version": "2016-09-01",
+        "web-site-version": "2016-08-01",
+        "prefix": "image",
+        "unique": "[uniqueString(resourceGroup().id)]",
+        "location": "[resourceGroup().location]",
+        "web-app-url": "https://publicdata.blob.core.windows.net/cntkciqs/product-detection-automation.zip", 
+        "storage-name": "[concat(variables('prefix'), 'stor', variables('unique'))]",
+        "documentdb-name": "[concat(variables('prefix'), 'ddb', variables('unique'))]",
+        "web-farm-name": "[concat(variables('prefix'), 'webplan', variables('unique'))]",
+        "web-site-name": "[concat(variables('prefix'), 'web', variables('unique'))]",
+        "storage-id": "[resourceId('Microsoft.Storage/storageAccounts', variables('storage-name'))]",
+        "documentdb-id": "[resourceId('Microsoft.DocumentDB/databaseAccounts', variables('documentdb-name'))]",
+        "web-farm-id": "[resourceId('Microsoft.Web/serverfarms', variables('web-farm-name'))]",
+        "web-site-id": "[resourceId('Microsoft.Web/sites', variables('web-site-name'))]",
+        
+        "namePrefix": "[resourceGroup().name]",
+        "uniqueNamePrefix": "[toLower(concat(resourceGroup().name, uniqueString(subscription().subscriptionId)))]",
+        "location": "[resourceGroup().location]",
+        "imagePublisher": "microsoft-ads",
+        "imageOffer": "standard-data-science-vm",
+        "OSDiskName": "osdiskforwindowssimple",
+        "windowsOSVersion": "standard-data-science-vm",
+        "nicName": "[concat(variables('uniqueNamePrefix'),'vmnic')]",
+        "addressPrefix": "10.0.0.0/16",
+        "subnetName": "Subnet",
+        "subnetPrefix": "10.0.0.0/24",
+        "storageAccountType": "Standard_LRS",
+        "storageVersion": "2015-06-15",
+        "publicIPAddressesVersion": "2015-06-15",
+        "virtualNetworksVersion": "2015-06-15",
+        "networkInterfacesVersion": "2015-06-15",
+        "virtualMachinesVersion": "2016-04-30-preview",
+        "storageAccountName": "[variables('uniqueNamePrefix')]",
+        "storageId": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]",
+        "publicIPAddressName": "[concat(variables('uniqueNamePrefix'),'pubip')]",
+        "publicIPAddressType": "Dynamic",
+        "dnsNameForPublicIP": "[concat(variables('uniqueNamePrefix'),'dns')]", 
+        "vmStorageAccountContainerName": "vhds",
+        "vmName": "[parameters('vmName')]",
+        "virtualNetworkName": "[concat(variables('namePrefix'),'vnet')]",
+        "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',variables('virtualNetworkName'))]",
+        "subnetRef": "[concat(variables('vnetID'),'/subnets/',variables('subnetName'))]",
+        
+        "vm-ext-dv-name": "cntkExtension",
+        "virtual-machine-id": "[resourceId('Microsoft.Compute/virtualMachines', variables('vmName'))]",
+        "nic-id": "[resourceId('Microsoft.Network/networkInterfaces', variables('nicName'))]",
+        "vm-ext-dv-basepath": "https://publicdata.blob.core.windows.net/cntkciqs/",
+        "vm-ext-dv-script": "Deploy.ps1",
+        "vm-ext-dv-deploy-uri": "[uri(variables('vm-ext-dv-basepath'), variables('vm-ext-dv-script'))]"        
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Storage/storageAccounts",
+            "name": "[variables('storage-name')]",
+            "apiVersion": "[variables('storage-version')]",
+            "location": "[variables('location')]",
+            "sku": { "name": "Standard_LRS" },
+            "kind": "Storage"
+        },
+        {
+            "type": "Microsoft.DocumentDB/databaseAccounts",
+            "name": "[variables('documentdb-name')]",
+            "apiVersion": "[variables('documentdb-version')]",
+            "location": "[variables('location')]",
+            "properties": {
+                "databaseAccountOfferType": "Standard"
+            }
+        },
+        {
+            "type": "Microsoft.Web/serverfarms",
+            "name": "[variables('web-farm-name')]",
+            "apiVersion": "[variables('web-farm-version')]",
+            "location": "[resourceGroup().location]",
+            "sku": {"name": "S3"},
+            "properties": { }
+        },
+        {
+            "type": "Microsoft.Web/sites",
+            "name": "[variables('web-site-name')]",
+            "apiVersion": "[variables('web-site-version')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [ 
+                "[variables('web-farm-id')]",
+                "[variables('storage-id')]",
+                "[variables('documentdb-id')]"
+            ],
+            "properties": {
+                "serverFarmId": "[variables('web-farm-id')]"
+            },
+            "resources": [
+                {
+                    "type": "extensions",
+                    "name": "MSDeploy",
+                    "apiVersion": "[variables('web-site-version')]",
+                    "dependsOn": [ 
+                        "[variables('web-site-id')]"
+                    ],
+                    "properties": {
+                        "packageUri": "[variables('web-app-url')]",
+                        "dbType": "None",
+                        "connectionString": ""
+                    }
+                },
+                {
+                    "type": "siteextensions", 
+                    "name": "python353x64",                    
+                    "apiVersion": "[variables('web-site-version')]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Web/sites', variables('web-site-name'))]"
+                    ],                    
+                    "properties": { }
+                },                
+                {
+                    "type": "config",
+                    "name": "web",
+                    "apiVersion": "[variables('web-site-version')]",
+                    "dependsOn": [ 
+                        "[variables('web-site-id')]",
+                        "[resourceId('Microsoft.Web/sites/extensions', variables('web-site-name'), 'MSDeploy')]"
+                    ],
+                    "properties": {
+                        "use32BitWorkerProcess": false,
+                        "alwaysOn": true,
+                        "applicationLogs": {
+                            "fileSystem": {
+                                "level": "Verbose"
+                            }
+                        }                        
+                    }
+                },
+                {
+                    "type": "config",
+                    "name": "appsettings",
+                    "apiVersion": "[variables('web-site-version')]",
+                    "dependsOn": [ 
+                        "[variables('web-site-id')]",
+                        "[resourceId('Microsoft.Web/sites/extensions', variables('web-site-name'), 'MSDeploy')]"
+                    ],
+                    "properties": {
+                        "BLOB_ACCOUNT": "[variables('storage-name')]",
+                        "BLOB_KEY": "[listKeys(variables('storage-id'), variables('storage-version')).keys[0].value]",
+                        "DDB_URL": "[reference(variables('documentdb-name')).documentEndpoint]",
+                        "DDB_KEY": "[listKeys(variables('documentdb-id'), variables('documentdb-version')).primaryMasterKey]"
+                    }
+                }
+            ]
+        },
+
+        {
+            "type": "Microsoft.Storage/storageAccounts",
+            "name": "[variables('storageAccountName')]",
+            "apiVersion": "[variables('storageVersion')]",
+            "location": "[variables('location')]",
+            "properties": {
+                "accountType": "[variables('storageAccountType')]"
+            }
+        },
+        {
+            "apiVersion": "[variables('publicIPAddressesVersion')]",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "name": "[variables('publicIPAddressName')]",
+            "location": "[variables('location')]",
+            "properties": {
+                "publicIPAllocationMethod": "[variables('publicIPAddressType')]",
+                "dnsSettings": {
+                    "domainNameLabel": "[variables('dnsNameForPublicIP')]"
+                }
+            }
+        },
+        {
+            "apiVersion": "[variables('virtualNetworksVersion')]",
+            "type": "Microsoft.Network/virtualNetworks",
+            "name": "[variables('virtualNetworkName')]",
+            "location": "[variables('location')]",
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "[variables('addressPrefix')]"
+                    ]
+                },
+                "subnets": [
+                    {
+                        "name": "[variables('subnetName')]",
+                        "properties": {
+                            "addressPrefix": "[variables('subnetPrefix')]"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "apiVersion": "[variables('networkInterfacesVersion')]",
+            "type": "Microsoft.Network/networkInterfaces",
+            "name": "[variables('nicName')]",
+            "location": "[variables('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses/', variables('publicIPAddressName'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]"
+            ],
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "privateIPAllocationMethod": "Dynamic",
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses',variables('publicIPAddressName'))]"
+                            },
+                            "subnet": {
+                                "id": "[variables('subnetRef')]"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "apiVersion": "[variables('virtualMachinesVersion')]",
+            "type": "Microsoft.Compute/virtualMachines",
+            "name": "[variables('vmName')]",
+            "location": "[variables('location')]",
+            "plan": {
+                "name": "standard-data-science-vm",
+                "publisher": "microsoft-ads",
+                "product": "standard-data-science-vm"
+            },
+            "tags": {
+                "Application": "DataScience"
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
+                "[resourceId('Microsoft.Network/networkInterfaces/', variables('nicName'))]"
+            ],
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "[parameters('vmSize')]"
+                },
+                "osProfile": {
+                    "computername": "[variables('vmName')]",
+                    "adminUsername": "[parameters('adminUsername')]",
+                    "adminPassword": "[parameters('adminPassword')]"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "[variables('imagePublisher')]",
+                        "offer": "[variables('imageOffer')]",
+                        "sku": "[variables('windowsOSVersion')]",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "name": "osdisk",
+                        "vhd": {
+                            "uri": "[concat('http://',variables('storageAccountName'),'.blob.core.windows.net/',variables('vmStorageAccountContainerName'),'/',variables('OSDiskName'),'.vhd')]"
+                        },
+                        "caching": "ReadWrite",
+                        "createOption": "FromImage"
+                    }
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces',variables('nicName'))]"
+                        }
+                    ]
+                },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": "true",
+                        "storageUri": "[concat('http://',variables('storageAccountName'),'.blob.core.windows.net')]"
+                    }
+                }
+            },
+            "resources":[
+                {
+                    "type": "extensions",
+                    "name": "[variables('vm-ext-dv-name')]",
+                    "apiVersion": "[variables('virtualMachinesVersion')]",
+                    "location": "[variables('location')]",
+                    "dependsOn": [
+                        "[variables('virtual-machine-id')]",
+                        "[variables('nic-id')]"
+                    ],
+                    "properties": {
+                        "publisher": "Microsoft.Compute",
+                        "type": "CustomScriptExtension",
+                        "typeHandlerVersion": "1.8",
+                        "autoUpgradeMinorVersion": true,
+                        "settings": {							
+							"fileUris": [ "[variables('vm-ext-dv-deploy-uri')]" ],
+                            "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -File ', variables('vm-ext-dv-script'), ' ', variables('storage-name'), ' ', listKeys(variables('storage-id'), variables('storage-version')).keys[0].value, ' ', reference(variables('documentdb-name')).documentEndpoint, ' ', listKeys(variables('documentdb-id'), variables('documentdb-version')).primaryMasterKey)]"
+                        }
+                    }
+                }            
+            ]
+        }        
+    ],
+    "outputs": {
+        "storage": {
+            "value": "[reference(variables('storage-name'))]",
+            "type" : "object"
+        },
+        "storagename": {
+          "value": "[variables('storage-name')]",
+          "type" : "string"
+        },           
+        "documentdb": {
+            "value": "[reference(variables('documentdb-name'))]",
+            "type" : "object"
+        },
+        "documentdbs": {
+            "value": "[reference(variables('documentdb-name')).documentEndpoint]",
+            "type" : "string"
+        },        
+        "webfarm": {
+            "value": "[reference(variables('web-farm-name'))]",
+            "type" : "object"
+        },
+        "site": {
+            "value": "[reference(variables('web-site-name'))]",
+            "type" : "object"
+        },
+        "storageKeys": {
+            "value": "[listKeys(variables('storage-id'), variables('storage-version'))]",
+            "type" : "object"
+        },
+        "storageKeysP": {
+          "value": "[listKeys(variables('storage-id'), variables('storage-version')).keys[0].value]",
+          "type" : "string"
+        },         
+        "documentdbKeys": {
+            "value": "[listKeys(variables('documentdb-id'), variables('documentdb-version'))]",
+            "type" : "object"
+        },
+        "documentdbKeysP": {
+          "value": "[listKeys(variables('documentdb-id'), variables('documentdb-version')).primaryMasterKey]",
+          "type" : "string"
+        },            
+        "siteHostName": {
+            "value": "[reference(variables('web-site-name')).hostNames[0]]",
+            "type": "string"
+        },
+        "dataScienceVmUrl": {
+            "type": "string",
+            "value": "[concat('https://portal.azure.com/#resource/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Compute/virtualMachines/', variables('vmName'))]"
+        },
+        "vmName": {
+            "type": "string",
+            "value": "[parameters('vmName')]"
+        },
+        "vmUri": {
+            "type": "string",
+            "value": "[concat(variables('dnsNameForPublicIP'), '.', resourceGroup().location,'.cloudapp.azure.com')]"
+        },      
+        "adminUsername": {
+            "type": "string",
+            "value": "[parameters('adminUsername')]"
+        },
+        "adminPassword": {
+            "type": "string",
+            "value": "[parameters('adminPassword')]"
+      }          
+    }
+}

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Template>
+  <Title>Product Detection from Images</Title>
+  <Owner displayname="Lixun Zhang" email="lixzhang@microsoft.com"/>
+  <Feedback email="lixzhang@microsoft.com" />
+  <PublishedOn>06/02/2017</PublishedOn>
+  <ImageUrl>{PatternAssetBaseUrl}/cntk.png</ImageUrl>
+  <Description>This solution shows how to detect products from images using deep neural network (DNN) models. It includes steps such as traininging DNN models, publishing web services, and saving models and scores.</Description>
+  <Summary src="Summary.md" format="markdown"/>
+  <EstimatedTime>60 Minutes</EstimatedTime>
+  <EstimatedCost daily="$13.40" url="https://azure.github.io/Azure-CortanaIntelligence-SolutionAuthoringWorkspace/solution-prices" />
+  <ProvisioningSteps>
+    <ArmDeployment source="azuredeploy.json">
+    <Parameters>
+      <Credential type="windowsvm" username="adminUsername" password="adminPassword" />
+      <Parameter name="vmName" regex="{Constants.WindowsMachineNameRegex}">
+        <ExtraDescription>{Constants.WindowsMachineNameRegexDescription}</ExtraDescription>
+      </Parameter>
+    </Parameters>
+    </ArmDeployment>
+    <Manual title="Done">
+      <Instructions src="Instructions.md" format="markdown"/>
+    </Manual>
+  </ProvisioningSteps>
+</Template>
