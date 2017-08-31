@@ -214,16 +214,18 @@ Get the primary key for the DocumentDB account, which will be used in the Python
 <a name="dsvm"></a>
 ### Provision the Microsoft Data Science Virtual Machine
 
+Here we use Windows DSVM as an example. The steps for setting up a Linux DSVM is similar. In that case, you can choose **Data Science Virtual Mahcine for Linux (Ubuntu)** in step 3.
+
 1. Go to the [Azure Portal](https://ms.portal.azure.com) and navigate to the resource group you just created.
 2. In ***Overview*** panel, click **+Add** to add a new resource. Enter **Data Science Virtual Machine** and hit "Enter" key to search.
-3. Click on **Data Science Virtual Machine for Windows** offered by Microsoft (in the "Compute" category).
+3. Click on **Data Science Virtual Machine (DSVM) - Windows 2016** offered by Microsoft (in the "Compute" category).
 4. Click **Create** at the bottom of the description panel.
 5. Enter your **unique string** for "Name."
 6. Enter a user name and save it to your memo file.
 7. Enter your password and confirm it. Then save it to your memo file.
 8. Make sure the selected resource group is the one you just created. If not, choose the resource group you created for this solution.
 9. Leaving the default values for all other fields, click the **OK** button at the bottom.
-10. On the ***Size*** panel that shows up, choose a size (DS11_V2 Standard will suffice here). More size options are available by clicking the "View all" link on the "Choose a size" page. Click the **Select** button after making a selection.
+10. On the **Size** panel that shows up, choose a size (DS11_V2 Standard will suffice here). More size options are available by clicking the "View all" link on the "Choose a size" page. If you want to use GPU on the DSVM, select **HDD** for ***Supported disk type*** and choose one of the instances whose name starts with **NV** or **NC**. More information about these instances can be found on [this page](https://docs.microsoft.com/en-us/azure/virtual-machines/windows/sizes-gpu). Click the **Select** button after making a selection.
 11. On the ***Settings*** panel that appears:
     - check that the "Storage account" has been auto-filled with the names of a new storage account, as indicated by the presence of "(new) " in the account name. If it is not auto-filled or "(new) " is not present, click on it and choose the **+ Create new** option, using the auto-filled name or assigning a unique account name to it (e.g. by adding "s" to your **unique string**). Then click the **OK** button.
     - check that the "Diagnostics storage account" has been auto-filled with the names of a new storage account, as indicated by the presence of "(new) " in the account name. If it is not auto-filled or "(new) " is not present, click on it and choose the **+ Create new** option, using the auto-filled name or assigning a unique account name to it (e.g. by adding "d" to your **unique string**). Then click the **OK** button.
@@ -326,13 +328,15 @@ Instructions for creating a new DocumentDB account can be found in section [Crea
 
 ## Train a Model on the DSVM
 
+The instructions below are for Windows DSVM. If you're using a Linux DSVM, use **source activate** instead of **activate** to activate a virtual environment.
+
 ### Configure the DSVM
 
 Double-click the ".rdp" file that you downloaded in the "[Provision the Microsoft Data Science Virtual Machine](#dsvm)" step above. Enter your credentials for the DSVM to log into it. From this point forward, we'll do everything on the DSVM.
 
 Open a web browser on the DSVM and open the [GitHub repo](https://github.com/Azure/cortana-intelligence-product-detection-from-images). Download the repository by clicking on the **Clone or download** button of the GitHub repository and then **Download ZIP**. Unzip the downloaded file.
 
-Go to the [Unofficial Windows Binaries for Python Extension Packages site](http://www.lfd.uci.edu/~gohlke/pythonlibs/) to download the following Python wheel:
+Click [this link](https://publicdata.blob.core.windows.net/cntkciqs/numpy-1.12.1%2Bmkl-cp35-cp35m-win_amd64.whl) to download the following Python wheel:
 
 ```
 numpy-1.12.1+mkl-cp35-cp35m-win_amd64
@@ -343,15 +347,17 @@ Save 1 copy to each of the following folders:
 - "technical_deployment/train_model/resources/python35_64bit_requirements"
 - "technical_deployment/web_service/Wheels"
 
+The above wheel was downloaded from the [Unofficial Windows Binaries for Python Extension Packages site](http://www.lfd.uci.edu/~gohlke/pythonlibs/).
+
 Download the file *AlexNet.model* from [the CNTK site](https://www.cntk.ai/Models/AlexNet/AlexNet.model) and place it into the following folder: 
 
 - "technical_deployment/train_model/resources/cntk"
 
-Go to the [CNTK release page](https://github.com/Microsoft/CNTK/releases) and download "[CNTK for Windows v.2.0 RC 1 CPU only](https://cntk.ai/dlwc-2.0.rc1.html)", rename this to "cntk.zip" and put this in the following folder:
+Go to the [CNTK release page](https://github.com/Microsoft/CNTK/releases) and download "[CNTK for Windows v.2.0 RC 1 CPU only](https://cntk.ai/dlwc-2.0.rc1.html)." Rename this to "cntk.zip" and put this in the following folder:
 
 - "technical_deployment/web_service"
 
-Determine the path for the "technical_deployment/train_model/resources/python35_64bit_requirements" folder, then open a command window and type the following:
+Determine the path for the "technical_deployment/train_model/resources/python35_64bit_requirements" folder, then open a command window and type the following (use **source activate cntk-py35** instead of **activate cntk-py35** if you are using a Linux DSVM):
 
 ````bash
 cd <path-to-resources/python35_64bit_requirements>
@@ -362,7 +368,7 @@ pip install -r requirements.txt
 
 When run successfully, these commands create a virtual environment and activate it. They also install the packages we will need for the rest of the tutorial.
 
-The tasks that are described here using DSVM can also be completed using your local Windows machine. However, there are several advantages in using the DSVM. One example is that you can use the already-installed tools like Python, Git, and PowerBI, without having to do that by yourself. Another example is that you can take advantage of GPUs that are available with the [Deep Learning toolkit for Data Science VM](https://azuremarketplace.microsoft.com/en-us/marketplace/apps/microsoft-ads.dsvm-deep-learning?tab=Overview). While the instructions here are for DSVM without GPUs, the steps are similar if you're using the Deep learning toolkit for Data Science VM. We will add details about how to use the DSVM with GPU in future.
+The tasks that are described here using DSVM can also be completed using your local machine. However, there are several advantages in using the DSVM. One example is that you can use the already-installed tools like Python, Git, and PowerBI, without having to do that by yourself. Another advantage is that you can take advantage of optional GPUs for DSVMs. The instructions here can be used for DSVMs with or without GPUs.
 
 Return to [Manage Historic Data](#manage-historic-data) if you're using DSVM for managing historic data to follow the rest of the instruction in that section. Otherwise, continue to the next section.
 
@@ -377,7 +383,7 @@ In this step we'll download the images from Blob and labels from DocumentDB. Jus
 
 In addition, use today's date as value for `model_version` in the format of `yyyymmdd`. Leave the other fields as-is.
 
-Check the folder "technical_deployment/train_model/data/grocery" and confirm that it is empty. Open a command window and type the following to download the data:
+Check the folder "technical_deployment/train_model/data/grocery" and confirm that it is empty. Open a command window and type the following to download the data (use **source activate cntk-py35** instead of **activate cntk-py35** if you are using a Linux DSVM):
 
 ````bash
 cd <path-to-data_management-folder>
@@ -403,7 +409,7 @@ The original Caffe implementation used in the R-CNN papers can be found at githu
 
 You can learn more about the scripts and models from the "train_model" folder's README file and from the [Object Detection Using CNTK Tutorial](https://github.com/Azure/ObjectDetectionUsingCntk). Notice however the prerequisites as described there are not relevant here.
 
-In this section the Fast R-CNN model will be used. Open a command window and type the following to train the model. It takes about 1 minute to run "4_trainSVM.py" and the other scripts complete within seconds.
+In this section the Fast R-CNN model will be used. Open a command window and type the following to train the model. It takes about 1 minute to run "4_trainSVM.py" and the other scripts complete within seconds (use **source activate cntk-py35** instead of **activate cntk-py35** if you are using a Linux DSVM).
 
 ````bash
 cd <path-to-train_model-folder>
@@ -418,7 +424,7 @@ python 5_visualizeResults.py
 
 ### Save the Model
 
-Once you're satisfied with the trained model, you can save its parameters to Blob for future reference. You can also save the performance metrics to DocumentDB. To do these, open a command window and run the following commands:
+Once you're satisfied with the trained model, you can save its parameters to Blob for future reference. You can also save the performance metrics to DocumentDB. To do these, open a command window and run the following commands (use **source activate cntk-py35** instead of **activate cntk-py35** if you are using a Linux DSVM):
 
 ```bash
 cd <path-to-technical_deployment\data_management-folder>
@@ -433,7 +439,7 @@ After you run these commands successfully, the model parameters will be saved in
 
 ## Deploy a Web Service
 
-1. Open a command window and type the following to copy the trained model and supporting files to the web service folder:
+1. Open a command window and type the following to copy the trained model and supporting files to the web service folder (use **source activate cntk-py35** instead of **activate cntk-py35** if you are using a Linux DSVM):
 ```bash
 cd <path-to-data_management-folder>
 activate cntk-py35
@@ -556,7 +562,7 @@ To use the new images for retraining, we will follow these steps:
 - Retrain the model using historical data and the newly-annotated images
 - Save and deploy the retrained model
 
-The downloaded images will be saved in a folder named "livestream" under the folder "technical_deployment/train_model/data/grocery." This folder will be generated by the `6_annotation_download_data.py` script. To download the images, open a command window and run the following commands:
+The downloaded images will be saved in a folder named "livestream" under the folder "technical_deployment/train_model/data/grocery." This folder will be generated by the `6_annotation_download_data.py` script. To download the images, open a command window and run the following commands (use **source activate cntk-py35** instead of **activate cntk-py35** if you are using a Linux DSVM):
 
 ````bash
 cd <path-to-data_management-folder>
@@ -564,7 +570,7 @@ activate cntk-py35
 python 6_annotation_download_data.py
 ````
 
-Open the folder "technical_deployment/train_model/data/grocery/livestream" to make sure that the images have been downloaded successfully. To view a scored image, you can modify the "visualize_local.py" script under the "technical_deployment\train_model" folder so that the variable "file_name" indicates the image you want to view. Then run the following commands:
+Open the folder "technical_deployment/train_model/data/grocery/livestream" to make sure that the images have been downloaded successfully. To view a scored image, you can modify the "visualize_local.py" script under the "technical_deployment\train_model" folder so that the variable "file_name" indicates the image you want to view. Then run the following commands (use **source activate cntk-py35** instead of **activate cntk-py35** if you are using a Linux DSVM):
 
 ````bash
 cd <path-to-train_model-folder>
@@ -574,7 +580,7 @@ python A_visualize_local.py
 
 Two scripts are provided for making annotations: one for defining the regions of interest (i.e., a bounding box around each object) and the other for adding labels to the regions of interest.
 
-Run the following commands to draw boundaries, pressing 'n' when you are done with one image, 'u' when you want to undo (i.e. remove) the last rectangle, and 'q' when you want to quit the annotation tool. The script will quit automatically once all images have been annotated.
+Run the following commands to draw boundaries, pressing 'n' when you are done with one image, 'u' when you want to undo (i.e. remove) the last rectangle, and 'q' when you want to quit the annotation tool. The script will quit automatically once all images have been annotated (use **source activate cntk-py35** instead of **activate cntk-py35** if you are using a Linux DSVM).
 
 ````bash
 cd <path-to-train_model-folder>
@@ -588,7 +594,7 @@ Continuing in the above command window, run the following command to add labels.
 python A2_annotateBboxLabels.py
 ````
 
-Once you are satistified with the annotations, save them to DocumentDB by running the following commands.
+Once you are satistified with the annotations, save them to DocumentDB by running the following commands (use **source activate cntk-py35** instead of **activate cntk-py35** if you are using a Linux DSVM).
 
 ````bash
 cd <path-to-technical_deployment\data_management-folder>
