@@ -15,8 +15,8 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-# C extensions
-*.so
+# C extensions: removing so, so that linux python dependecies can be uploaded
+# *.so
 
 # Distribution / packaging
 .Python
