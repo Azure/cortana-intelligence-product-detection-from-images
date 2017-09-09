@@ -22,10 +22,12 @@ import pdb
 # else:
 #     from .utils3_win64.cython_nms import nms
 
-if sys.version_info[1] == 4 and sys.version_info[0] == 3:
+if sys.platform == "win32" and sys.version_info[1] == 4 and sys.version_info[0] == 3:
     from .utils34_win64.cython_nms import nms
-elif sys.version_info[1] == 5 and sys.version_info[0] == 3:
+elif sys.platform == "win32" and sys.version_info[1] == 5 and sys.version_info[0] == 3:
     from .utils35_win64.cython_nms import nms
+elif sys.platform == "linux" and sys.version_info[1] == 5 and sys.version_info[0] == 3:
+    from .utils35_linux.cpu_nms import cpu_nms as nms
 else:
     print("ERROR: Python version {} not supported".format(sys.version_info))
     error
