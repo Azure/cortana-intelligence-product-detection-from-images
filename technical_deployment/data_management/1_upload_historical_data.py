@@ -25,7 +25,7 @@
 # =============================================================================
 # import packages
 # =============================================================================
-import os 
+import os
 import re
 import pytz
 import datetime
@@ -39,12 +39,11 @@ from helper import merge_roi_label
 # Create containers and collections
 # =============================================================================
 # Establish a link to blob
-block_blob_service = BlockBlobService(account_name=config.storage_account_name, 
+block_blob_service = BlockBlobService(account_name=config.storage_account_name,
                                       account_key=config.storage_account_key)
 
-
 # Create a container for saving images
-if block_blob_service.create_container(config.blob_container_image): 
+if block_blob_service.create_container(config.blob_container_image):
     print("Container for images was created successfully.")
 else:
     print("Container for images exists already.")
@@ -55,11 +54,9 @@ if block_blob_service.create_container(config.blob_container_model):
 else:
     print("Container for models exists already.")
 
-
 # Establish a link to DocDB
-client = document_client.DocumentClient(config.documentdb_uri, 
+client = document_client.DocumentClient(config.documentdb_uri,
                                         {'masterKey': config.documentdb_key})
-
 
 # check existing databases                                        
 # databases = list(client.ReadDatabases())
@@ -68,41 +65,41 @@ client = document_client.DocumentClient(config.documentdb_uri,
 databases = list(client.QueryDatabases({
     "query": "SELECT * FROM r WHERE r.id=@id",
     "parameters": [
-        { "name":"@id", "value": config.documentdb_database }
+        {"name": "@id", "value": config.documentdb_database}
     ]
 }))
 
 if len(databases) == 0:
     # Create DocumentDB database
-    db = client.CreateDatabase({ 'id': config.documentdb_database })
+    db = client.CreateDatabase({'id': config.documentdb_database})
 else:
     db = next((data for data in client.ReadDatabases()
                if data['id'] == config.documentdb_database))
     print("DocumentDB database exists already.")
-                
+
 # check existing collections
-collections = [collection['id'] for collection in  list(client.ReadCollections(db['_self']))]    
+collections = [collection['id'] for collection in list(client.ReadCollections(db['_self']))]
 
 if config.documentdb_collectoion_image not in collections:
     # Create collection for saving image meta-data
     collection = client.CreateCollection(
         db['_self'],
-        {'id': config.documentdb_collectoion_image }
+        {'id': config.documentdb_collectoion_image}
     )
 else:
     collection = next((coll for coll in client.ReadCollections(db['_self'])
                        if coll['id'] == config.documentdb_collectoion_image))
     print("The colleciton for images exists already.")
-    
-if config.documentdb_collectoion_performance not in collections:                       
+
+if config.documentdb_collectoion_performance not in collections:
     # Create collection for saving model performance
     collection2 = client.CreateCollection(
         db['_self'],
-        { 'id': config.documentdb_collectoion_performance }
+        {'id': config.documentdb_collectoion_performance}
     )
 else:
     collection2 = next((coll for coll in client.ReadCollections(db['_self'])
-                       if coll['id'] == config.documentdb_collectoion_performance))
+                        if coll['id'] == config.documentdb_collectoion_performance))
     print("The colleciton for model performance exists already.")
 
 # =============================================================================
@@ -111,20 +108,20 @@ else:
 print("\nUploading data ...\n")
 # file_names = []
 
-num_files = 0 
+num_files = 0
 
 for dirname, dirnames, filenames in os.walk(config.image_folder_onprem):
     for filename in filenames:
-         # print path to all filenames.
+        # print path to all filenames.
         # print(os.path.join(dirname, filename))
-        
+
         filename_split = filename.split(".")
         if filename_split[-1] == "jpg":
             f_t = filename_split[0]
             # file_names.append(f_t)
-            
+
             sub_folder = re.split(r"[/\\]+", dirname)[-1]
-            
+
             # upload image to Azure blob
             blob_name = "historic_" + sub_folder + "_" + f_t + ".jpg"
             local_image = os.path.join(dirname, filename)
@@ -134,46 +131,45 @@ for dirname, dirnames, filenames in os.walk(config.image_folder_onprem):
                 local_image,
                 content_settings=ContentSettings(content_type='image/png')
             )
-            
-            blob_url = ("https://" + config.storage_account_name  
-                        + ".blob.core.windows.net/"  
+
+            blob_url = ("https://" + config.storage_account_name
+                        + ".blob.core.windows.net/"
                         + config.blob_container_image + "/" + blob_name)
-            
-            
+
             # get image information
             appliance_id = "appliance_0"
             usage = sub_folder
             dt_modified = os.path.getmtime(local_image)
             modified_date = datetime.datetime.fromtimestamp(
-                dt_modified, 
+                dt_modified,
                 pytz.timezone('US/Eastern')
             ).isoformat()
             modified_date_UTC = datetime.datetime.utcfromtimestamp(
                 dt_modified
             ).isoformat()
-            
+
             roi_annotated = []
             roi_annotated_dict = {}
             # annotate source info
             annotated_by_user = None
             annotated_by_model = None
             annotated_date = None
-            
+
             num_files += 1
-            
+
             if sub_folder in ["positive", "testImages"]:
                 # merge roi and label
                 f_t_roi = f_t + ".bboxes.tsv"
-                fname_box = os.path.join(dirname, f_t_roi) 
+                fname_box = os.path.join(dirname, f_t_roi)
                 f_t_label = f_t + ".bboxes.labels.tsv"
-                fname_label = os.path.join(dirname, f_t_label) 
+                fname_label = os.path.join(dirname, f_t_label)
                 roi_annotated = merge_roi_label(fname_box, fname_label)
-                
+
                 annotated_by_user = config.annotated_by_user_history
-                annotated_by_model = None       
+                annotated_by_model = None
                 dt = os.path.getmtime(fname_box)
                 annotated_date = datetime.datetime.fromtimestamp(
-                    dt, 
+                    dt,
                     pytz.timezone('US/Eastern')
                 ).isoformat()
 
@@ -187,22 +183,22 @@ for dirname, dirnames, filenames in os.walk(config.image_folder_onprem):
                 "annotatedByUser": annotated_by_user,
                 "annotatedByModel": annotated_by_model,
                 "annotatedDate": annotated_date,
-                "roiAnnotated": roi_annotated, 
-                "roiAnnotatedDict": roi_annotated_dict, 
-                "roiSelectiveSearch":[
-                ],      
+                "roiAnnotated": roi_annotated,
+                "roiAnnotatedDict": roi_annotated_dict,
+                "roiSelectiveSearch": [
+                ],
                 "annotationHistory": [
                     {
                         "annotatedByUser": annotated_by_user,
-                        "annotatedByModel":annotated_by_model,
+                        "annotatedByModel": annotated_by_model,
                         "annotatedDate": annotated_date,
-                        "roiAnnotated": roi_annotated, 
+                        "roiAnnotated": roi_annotated,
                     }
                 ]
             }
-            
+
             # upload the document   
             document = client.CreateDocument(collection['_self'], entry)
-            
-print("\nData for {} out of 30 images have been uploaded.".format(num_files))			
+
+print("\nData for {} out of 30 images have been uploaded.".format(num_files))
 print("Done.") 

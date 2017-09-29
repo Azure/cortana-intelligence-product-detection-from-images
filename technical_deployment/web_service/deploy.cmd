@@ -14,7 +14,7 @@ IF %ERRORLEVEL% NEQ 0 (
 :: VARIABLES
 echo "ATTENTION"
 echo "USER MUST CHECK/SET THESE VARIABLES:"
-SET PYTHON_EXE=%SYSTEMDRIVE%\home\python354x64\python.exe
+SET PYTHON_EXE=%SYSTEMDRIVE%\home\python353x64\python.exe
 echo "Installed python extension installed here:"
 echo %PYTHON_EXE%
 

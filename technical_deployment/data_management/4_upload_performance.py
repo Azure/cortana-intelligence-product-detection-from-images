@@ -4,30 +4,30 @@
 
 """Upload performance to DocCB"""
 
-#%%
+# %%
 # =============================================================================
 # import packages
 # =============================================================================
 import config
 import pydocumentdb.document_client as document_client
 
-#%%
+# %%
 # =============================================================================
 # Establish links to DocDB
 # =============================================================================
 # Establish a link to DocDB
-client = document_client.DocumentClient(config.documentdb_uri, 
+client = document_client.DocumentClient(config.documentdb_uri,
                                         {'masterKey': config.documentdb_key})
-                                        
+
 # Read databases and take first since id should not be duplicated.
-db = next((data for data in client.ReadDatabases() 
+db = next((data for data in client.ReadDatabases()
            if data['id'] == config.documentdb_database))
 
 # Read collections and take first since id should not be duplicated.
-collection = next((coll for coll in client.ReadCollections(db['_self']) 
-             if coll['id'] == config.documentdb_collectoion_performance))
+collection = next((coll for coll in client.ReadCollections(db['_self'])
+                   if coll['id'] == config.documentdb_collectoion_performance))
 
-#%%
+# %%
 # =============================================================================
 # upload performance to DocDB
 # =============================================================================

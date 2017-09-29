@@ -265,7 +265,7 @@ Once the VM is created, you can remote desktop into it using the account credent
 13. Go back to your resource group overview and wait until the App Service is deployed as reported in the Notifications area. Click **Refresh** in the **Overview** pane. 
 14. Click on the newly deployed App Service (Type "App Service") and you'll see the "Overview" page.
 15. In the left panel click on **Application settings** (in **SETTINGS** group) then select "64-bit" for "Platform" and "On" for "Always On." Save the settings by clicking on **Save**.
-16. In the left panel click on **Extensions** (in **DEVELOPMENT TOOLS** group) then click **+Add**. In the window that appears, select **Choose Extension** then **Python 3.5.4 x64**. 
+16. In the left panel click on **Extensions** (in **DEVELOPMENT TOOLS** group) then click **+Add**. In the window that appears, select **Choose Extension** then **Python 3.5.3 x64**. 
 17. Click **OK** to accept the legal terms and **OK** again to install the web app extension. Make sure the extension is installed successfully as reported in the "Notifications" area.
 18. In the left panel, click on **Deployment options** (in **DEPLOYMENT** group), then **Choose Source**, followed by **Local Git Repository**. Leave **Performance Test** as "Not Configured" and click on **OK** to set up the deployment source. Instructions for setting up  your credentials are in next step.
 19. In the left panel, click on **Deployment credentials** (in **DEPLOYMENT** group). Select your deployment username and password and save them to your memo file.
