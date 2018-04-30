@@ -7,7 +7,7 @@ The objective of this Guide is to demonstrate data pipelines for retailers to de
 ## Solution Demo
 The snapshot below shows the products detected from an image using the [demo website](http://cntkimages.azurewebsites.net/). You'll be able to deploy the same website using your own Azure subscription by the end of the Guide.
 
-![demo](https://cloud.githubusercontent.com/assets/9322661/25716462/1c50db4e-30cd-11e7-89e1-208dad46b4c6.PNG)
+![demo](https://user-images.githubusercontent.com/9322661/39447679-912dfee4-4c90-11e8-9b0f-0fe76879c94a.JPG)
 
 ## Solution Dashboard
 

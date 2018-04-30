@@ -88,8 +88,7 @@ evalVocOverlapThreshold = 0.1 # voc-style intersection-over-union threshold used
 ############################
 if datasetName.startswith("grocery"):
     classes = ('__background__',  # always have '__background__' be at index 0
-               "avocado", "orange", "butter", "champagne", "eggBox", "gerkin", "joghurt", "ketchup",
-               "orangeJuice", "onion", "pepper", "tomato", "water", "milk", "tabasco", "mustard")
+               "orange", "eggBox", "joghurt", "ketchup", "squash", "mushroom", "water", "mustard")
 
     # classes = ('__background__',  # always have '__background__' be at index 0
     #            "avocado", "orange", "butter", "champagne", "cheese", "eggBox", "gerkin", "joghurt", "ketchup",
